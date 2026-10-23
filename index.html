@@ -232,7 +232,7 @@
       margin-left: 0;
       padding: calc(var(--header-height, 200px) + 24px) 16px 16px;
     }
-    .float-area { position: fixed; top: 0; left: 0; right: 0; bottom: 0; }
+    .float-area { position: fixed; top: 0; left: 0; right: 0; bottom: 0; touch-action: none; }
     /* Full view covers the whole display */
     .lightbox { left: 0; }
     .lightbox .stage { inset: 56px 16px 56px 16px; }
@@ -619,6 +619,24 @@ function startPage() {
     push = Math.max(-4000, Math.min(4000, push + d * FLOAT.scrollStrength));
   }, { passive: false });
 
+  // Phones: swiping over the images moves them like scrolling
+  let touchY = null, touchTime = 0;
+  area.addEventListener("touchstart", e => {
+    touchY = e.touches[0].clientY;
+    touchTime = performance.now();
+  }, { passive: true });
+  area.addEventListener("touchmove", e => {
+    if (touchY === null) return;
+    e.preventDefault();
+    const y = e.touches[0].clientY;
+    const now = performance.now();
+    const dt = Math.max((now - touchTime) / 1000, 0.008);
+    push = Math.max(-4000, Math.min(4000, (touchY - y) / dt));
+    touchY = y;
+    touchTime = now;
+  }, { passive: false });
+  area.addEventListener("touchend", () => { touchY = null; });
+  
   let last = performance.now();
   function step(now) {
     if (run !== floatRun) return;             // page changed -> stop this loop
