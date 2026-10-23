@@ -341,7 +341,9 @@ const imprintHTML = `
 
 /* Settings for the floating images on the start page */
 const FLOAT = {
-  gap: 12,            // roughly every how many seconds a new image appears
+  gap: 16,            // roughly every how many seconds a new image appears
+  gapMobile: 6,       // same on phones (smaller = denser)
+  startCountMobile: 5,// images on screen when the page loads, on phones
   durationMin: 32,    // minimum seconds an image needs to cross the screen
   durationMax: 42,    // … and maximum (similar speeds = less overtaking and overlap)
   widthMin: 32,       // image width in % of the right-hand area
@@ -355,7 +357,7 @@ const FLOAT = {
 const COLLAGE = {
   widthMin: 38,       // image width in % of the right-hand area
   widthMax: 58,
-  overlapMin: -3,      // overlap with the image above, in % of the area width
+  overlapMin: -6,      // overlap with the image above, in % of the area width
   overlapMax: 12
 };
 
@@ -368,6 +370,7 @@ const projectList = document.getElementById("project-list");
 const content = document.getElementById("content");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const random = (min, max) => min + Math.random() * (max - min);
+const isPhone = () => window.matchMedia("(max-width: 760px)").matches;
 
 // File name from the title: spaces -> _, special characters like [ ] are dropped
 function fileName(title) {
@@ -380,6 +383,11 @@ function exists(src) {
     const done = result => { clearTimeout(timer); resolve(result); };
     const timer = setTimeout(() => done(false), 10000);
     if (src.endsWith(".mp4")) {
+      // online: just ask the server whether the file exists (reliable on iPhone)
+      if (location.protocol.startsWith("http")) {
+        fetch(src, { method: "HEAD" }).then(r => done(r.ok)).catch(() => done(false));
+        return;
+      }
       const v = document.createElement("video");
       v.preload = "metadata";
       v.muted = true;
@@ -444,7 +452,7 @@ function videoElement(src, alt) {
   v.setAttribute("muted", "");
   v.setAttribute("playsinline", "");
   v.setAttribute("aria-label", alt);
-  v.addEventListener("loadeddata", () => v.play().catch(() => {}));
+  v.addEventListener("loadeddata", () => v.play().catch(() => { v.controls = true; }));
   v.addEventListener("error", () => v.replaceWith(placeholder(src)));
   return v;
 }
@@ -636,7 +644,7 @@ function startPage() {
     touchTime = now;
   }, { passive: false });
   area.addEventListener("touchend", () => { touchY = null; });
-  
+
   let last = performance.now();
   function step(now) {
     if (run !== floatRun) return;             // page changed -> stop this loop
@@ -654,7 +662,7 @@ function startPage() {
 
     // New images: from below when moving up – from above when scrolling back
     distance += (baseSpeed + push) * dt;
-    const gapPx = (h / avgDuration) * FLOAT.gap;
+    const gapPx = (h / avgDuration) * (isPhone() ? FLOAT.gapMobile : FLOAT.gap);
     while (distance >= gapPx) { addImage(h + random(0, 60)); distance -= gapPx; }
     while (distance <= -gapPx) { addImage("top"); distance += gapPx; }
 
@@ -678,8 +686,9 @@ function startPage() {
       pool = lists.flat();
       if (!pool.length) return;
       // spread evenly over the height at the start
-      for (let i = 0; i < FLOAT.startCount; i++)
-        addImage((i + random(0.1, 0.6)) / FLOAT.startCount * height());
+      const count = isPhone() ? FLOAT.startCountMobile : FLOAT.startCount;
+      for (let i = 0; i < count; i++)
+        addImage((i + random(0.1, 0.6)) / count * height());
       last = performance.now();
       requestAnimationFrame(step);
     });
