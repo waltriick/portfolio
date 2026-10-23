@@ -1,24 +1,863 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>My Portfolio</title>
-        <meta name="description" content="This is my Portfolio">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="style.css">
-    </head>
-    <body>
-        <div style="width: 1728px; height: 1117px; padding-top: 46px; padding-bottom: 101px; padding-left: 56px; padding-right: 55px; background: white; flex-direction: column; justify-content: flex-start; align-items: center; gap: 79px; display: inline-flex">
-            <div style="width: 1617px; height: 136px; position: relative">
-              <div style="width: 1617px; height: 136px; left: 0px; top: 0px; position: absolute; background: #D9D9D9"></div>
-              <div style="width: 1617px; height: 136px; left: 0px; top: 0px; position: absolute; text-align: center; color: black; font-size: 64px; font-family: Futura; font-weight: 500; word-wrap: break-word">Welcome</div>
-            </div>
-            <a href="space_museum.html"><img style="width: 1008px; height: 755px" src="assets/space_musem_Lageplan_new.png" /></a>
-          </div>
-    </body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>patrick walter — architecture</title>
+<meta name="description" content="Architecture portfolio of Patrick Walter">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="favicon.png">
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #111111;
+    --muted: #8a8a8a;
+    --placeholder: #f1f0ee;
+    --sidebar: 300px;
+    --gap: 24px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    text-transform: lowercase;
+  }
+  a { color: inherit; text-decoration: none; }
+  a:hover, a.active { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* ---------- Menu blur on hover ---------- */
+  @property --strength { syntax: "<number>"; inherits: true;  initial-value: 0; }
+  @property --wave     { syntax: "<number>"; inherits: false; initial-value: 1; }
+  .sidebar a {
+    --strength: 0;
+    transition: --strength 1.2s ease;        /* how slowly the blur fades in and out */
+  }
+  .sidebar a:hover {
+    --strength: 1;
+    text-decoration: none;
+  }
+  .sidebar a .letter {
+    white-space: pre;
+    filter: blur(calc(var(--strength) * var(--wave) * 2.6px));   /* maximum blur */
+    animation: wave 2.4s ease-in-out infinite alternate;         /* speed of the wobble */
+    animation-delay: var(--delay);
+  }
+  @keyframes wave {
+    from { --wave: 0.25; }
+    to   { --wave: 1.3; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sidebar a .letter { animation: none; }
+  }
+
+  /* ---------- Left column ---------- */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: var(--sidebar);
+    padding: var(--gap);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .name { font-size: 14px; font-weight: normal; margin-bottom: 2px; }
+  .subtitle { color: var(--muted); margin-bottom: 40px; }
+  .project-list { list-style: none; flex: 1; }
+  .project-list li { display: flex; justify-content: space-between; gap: 12px; }
+  .project-list .year { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .footer-nav { margin-top: 40px; display: flex; flex-direction: column; }
+  .footer-nav a { width: fit-content; }
+
+  /* ---------- Right side ---------- */
+  main {
+    margin-left: var(--sidebar);
+    padding: var(--gap) var(--gap) var(--gap) 0;
+    min-height: 100vh;
+  }
+  .project-header { max-width: 640px; margin-bottom: 40px; }
+  .project-header h2 { font-size: 14px; font-weight: normal; }
+  .project-header .meta { color: var(--muted); margin-bottom: 16px; }
+  .project-header p { text-transform: none; }
+  .placeholder {
+    aspect-ratio: 3 / 2;
+    background: var(--placeholder);
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: none;
+    font-size: 12px;
+  }
+
+  /* Project page: collage with slightly overlapping images */
+  .collage { position: relative; padding-bottom: 80px; }
+  .collage figure {
+    position: relative;
+    width: var(--w);
+    margin-left: calc((100% - var(--w)) * var(--pos));
+    margin-top: calc(var(--overlap) * -1);
+  }
+  .collage figure:first-child { margin-top: 0; }
+  .collage figure:hover { z-index: 999 !important; }
+  .collage img, .collage video, .collage .placeholder { width: 100%; height: auto; display: block; }
+
+  /* Images appear while scrolling */
+  .collage figure {
+    opacity: 0;
+    translate: 0 60px;                       /* distance they glide up */
+    filter: blur(8px);                       /* starting blur */
+    transition: opacity 1.2s ease, translate 1.2s ease, filter 1.2s ease;   /* duration */
+  }
+  .collage figure.visible { opacity: 1; translate: 0 0; filter: blur(0); }
+  @media (prefers-reduced-motion: reduce) {
+    .collage figure { translate: none; filter: none; transition: opacity .6s ease; }
+  }
+
+  /* Dragging on project pages (mouse only) */
+  @media (hover: hover) and (pointer: fine) {
+    .collage figure { cursor: grab; user-select: none; -webkit-user-select: none; }
+    .collage figure.dragging { cursor: grabbing; z-index: 10000 !important; }
+    .collage img, .collage video { pointer-events: none; -webkit-user-drag: none; }
+  }
+
+  /* Full view (lightbox) on project pages */
+  .lightbox {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    left: var(--sidebar);                    /* covers the whole right side */
+    background: var(--bg);
+    z-index: 20000;
+    display: none;
+  }
+  .lightbox.open { display: block; }
+  .lightbox .stage {
+    position: absolute;
+    inset: 56px var(--gap) 56px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lightbox .stage img, .lightbox .stage video, .lightbox .stage .placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;                     /* as large as possible, never cropped */
+    display: block;
+    animation: lightbox-in .35s ease;
+  }
+  @keyframes lightbox-in { from { opacity: 0; } to { opacity: 1; } }
+  .lightbox .zone { position: absolute; top: 0; bottom: 0; width: 50%; z-index: 1; }
+  .lightbox .zone.prev { left: 0;  cursor: w-resize; }
+  .lightbox .zone.next { right: 0; cursor: e-resize; }
+  .lightbox .close, .lightbox .counter { position: absolute; z-index: 2; }
+  .lightbox .close {
+    top: var(--gap); right: var(--gap);
+    background: none; border: 0; font: inherit; color: inherit;
+    cursor: pointer; padding: 0;
+  }
+  .lightbox .close:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .lightbox .counter { bottom: var(--gap); right: var(--gap); color: var(--muted); }
+  .lightbox .lb-title { position: absolute; z-index: 2; top: var(--gap); left: 0; }
+  body.lightbox-open { overflow: hidden; }
+
+  /* Info page */
+  .info { max-width: 560px; text-transform: none; }
+  .info p { margin-bottom: 1em; }
+  .info h2 { font-size: 14px; font-weight: normal; text-transform: lowercase; margin: 2em 0 0.5em; }
+
+  /* ---------- Start page: floating images ---------- */
+  .float-area {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    left: var(--sidebar);
+    overflow: hidden;
+  }
+  .float-area a {
+    position: absolute;
+    top: 0;
+    will-change: transform;
+  }
+  .float-area a:hover { z-index: 9999 !important; text-decoration: none; }
+  @media (hover: hover) and (pointer: fine) {   /* mouse only, not on phones */
+    .float-area a { cursor: grab; user-select: none; -webkit-user-select: none; }
+    .float-area a.dragging { cursor: grabbing; z-index: 10000 !important; }
+  }
+  .float-area img, .float-area video { -webkit-user-drag: none; pointer-events: none; }
+  .float-area img, .float-area video, .float-area .placeholder { width: 100%; height: auto; display: block; }
+  .float-area .caption {
+    position: absolute;
+    left: 0; bottom: -20px;
+    opacity: 0;
+    transition: opacity .2s;
+    white-space: nowrap;
+  }
+  .float-area a:hover .caption { opacity: 1; }
+
+  /* ---------- Phones ---------- */
+  @media (max-width: 760px) {
+    /* Menu stays fixed at the top */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: auto;
+      width: auto;
+      padding: 16px;
+      overflow: visible;
+      background: var(--bg);
+      z-index: 50;
+    }
+    /* Soft fade to white below the menu: images disappear behind it */
+    .sidebar::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; top: 100%;
+      height: 0px;                          /* length of the fade */
+      background: linear-gradient(to bottom, var(--bg), rgb(255 255 255 / 0));
+      pointer-events: none;
+    }
+    .subtitle { margin-bottom: 20px; }
+    /* info, instagram, imprint at the top right */
+    .footer-nav {
+      position: absolute;
+      top: 16px; right: 16px;
+      margin: 0;
+      flex-direction: row;
+      gap: 0 14px;
+    }
+    main {
+      position: relative;
+      z-index: 0;                            /* keeps dragged images below the menu */
+      margin-left: 0;
+      padding: calc(var(--header-height, 200px) + 24px) 16px 16px;
+    }
+    .float-area { position: fixed; top: 0; left: 0; right: 0; bottom: 0; }
+    /* Full view covers the whole display */
+    .lightbox { left: 0; }
+    .lightbox .stage { inset: 56px 16px 56px 16px; }
+    .lightbox .close { top: 16px; right: 16px; }
+    .lightbox .counter { bottom: 16px; right: 16px; }
+    .lightbox .lb-title { top: 16px; left: 16px; }
+    /* On project, info and imprint pages: only name, subtitle and links at the top */
+    body.subpage .project-list { display: none; }
+    body.subpage .subtitle { margin-bottom: 0; }
+    .collage figure {
+      width: min(100%, calc(var(--w) * 1.4));
+      margin-left: calc((100% - min(100%, calc(var(--w) * 1.4))) * var(--pos));
+      margin-top: calc(var(--overlap) * -0.5);
+    }
+  }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <h1 class="name"><a href="#">patrick walter</a></h1>
+  <div class="subtitle">architecture</div>
+  <ul class="project-list" id="project-list"></ul>
+  <nav class="footer-nav">
+    <a href="#info">info</a>
+    <a href="https://www.instagram.com/" target="_blank" rel="noopener">instagram</a>
+    <a href="#imprint">imprint</a>
+  </nav>
+</aside>
+
+<main id="content"></main>
+
+<script>
+/* =========================================================
+   PROJECTS — this is where you maintain your content.
+   New project: copy a block and change the values.
+
+   Every project gets a subfolder inside  assets/ .
+   Folder and files are named after the project title, e.g.
+   assets/alors_on_danse/alors_on_danse_01.jpg
+   (spaces in the title become _ , special characters like [ ]
+   are dropped: "salt [a]way" -> assets/salt_away/salt_away_01.jpg )
+
+   The site finds the files by itself: it tries _01, _02, _03 …
+   as .jpg, .png and .mp4 until a number is missing.
+   So number your files without gaps (01, 02, 03 …)!
+   Videos (.mp4) play muted in an endless loop.
+   ========================================================= */
+const projects = [
+  {
+    slug: "alors-on-danse",
+    title: "alors on danse",
+    year: "2026",
+    place: "brussels",
+    context: "Thesis Project at TUM, Prof. Stephen Bates",
+    text: "Conversion of an office building into housing. A club moves into the former underground car park, and its waste heat warms the apartments above.<br><br>Thesis project for the topic “Castles in the City – Living Labyrinths in Brussels”."
+  },
+  {
+    slug: "house-of-metal",
+    title: "house of metal",
+    year: "2025/26",
+    place: "munich",
+    context: "3rd year master project at TUM, Prof. Uta Graff",
+    text: ""
+  },
+  {
+    slug: "lamina",
+    title: "lamina",
+    year: "2025/26",
+    place: "door handle, cast bronze",
+    context: "3rd year master seminar at TUM, Prof. Uta Graff",
+    text: "Lamina is a cast bronze door handle made from laser-cut cardboard layers. Wax sprues were attached to the cardboard model, and it was invested in fireclay. Over several days in the kiln, the cardboard and wax burned out, and bronze was poured through the channels the wax left behind. The handle was then sandblasted and patinated with liver of sulphur. Its surface still shows every layer of the original model."
+  },
+  {
+    slug: "salt-away",
+    title: "salt [a]way",
+    year: "2024",
+    place: "",
+    context: "",
+    text: ""
+  },
+  {
+    slug: "la-rotante",
+    title: "la rotante",
+    year: "2023/24",
+    place: "",
+    context: "1st year master seminar, Integrated product design",
+    text: "An honest, simple, and durable design. Crafted from a single sheet of raw aluminium, La Rotante reveals its materiality and manufacturing process at first glance.Its minimalist form streamlines production in just a few steps, starting with precision-cut aluminum by a water jet, followed by folding and hand assembly using a hammer and pins, all without welding joints. With a cut-out circle serving as a versatile lampshade, simply rotate it to create direct or indirect light according to your needs."
+    }
+];
+
+/* Texts for the info and imprint pages */
+const infoHTML = `
+  <p>Patrick Walter studies architecture at TUM.</p>
+  <h2>contact</h2>
+  <p><a href="mailto:mail@deinedomain.de">mail@deinedomain.de</a></p>
+`;
+const imprintHTML = `
+  <h2>imprint (impressum)</h2>
+  <p>Information according to § 5 DDG<br>
+  Patrick Walter<br>
+  Street and number<br>
+  Postcode City</p>
+  <p>Contact: mail@deinedomain.de</p>
+`;
+
+/* Settings for the floating images on the start page */
+const FLOAT = {
+  gap: 7,             // roughly every how many seconds a new image appears
+  durationMin: 32,    // minimum seconds an image needs to cross the screen
+  durationMax: 42,    // … and maximum (similar speeds = less overtaking and overlap)
+  widthMin: 32,       // image width in % of the right-hand area
+  widthMax: 52,
+  startCount: 4,      // how many images are already on screen when the page loads
+  scrollStrength: 6,  // how strongly scrolling pushes the images
+  scrollGlide: 0.9    // 0 = stops immediately, closer to 1 = glides on longer
+};
+
+/* Settings for the collage on project pages */
+const COLLAGE = {
+  widthMin: 45,       // image width in % of the right-hand area
+  widthMax: 72,
+  overlapMin: 4,      // overlap with the image above, in % of the area width
+  overlapMax: 12
+};
+
+/* ================= no need to change anything below ================= */
+const ASSET_FOLDER = "assets";
+const EXTENSIONS = [".jpg", ".png", ".mp4"];   // tried in this order
+const MAX_FILES = 99;
+
+const projectList = document.getElementById("project-list");
+const content = document.getElementById("content");
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const random = (min, max) => min + Math.random() * (max - min);
+
+// File name from the title: spaces -> _, special characters like [ ] are dropped
+function fileName(title) {
+  return title.trim().replace(/\s+/g, "_").replace(/[^\p{L}\p{N}_-]/gu, "");
+}
+
+// Checks whether a file exists (works online and locally via double-click)
+function exists(src) {
+  return new Promise(resolve => {
+    const done = result => { clearTimeout(timer); resolve(result); };
+    const timer = setTimeout(() => done(false), 10000);
+    if (src.endsWith(".mp4")) {
+      const v = document.createElement("video");
+      v.preload = "metadata";
+      v.muted = true;
+      v.onloadedmetadata = () => { done(true); v.removeAttribute("src"); v.load(); };
+      v.onerror = () => done(false);
+      v.src = src;
+    } else {
+      const img = new Image();
+      img.onload = () => done(true);
+      img.onerror = () => done(false);
+      img.src = src;
+    }
+  });
+}
+
+async function findFile(name, number) {
+  const base = ASSET_FOLDER + "/" + encodeURIComponent(name) + "/" +
+    encodeURIComponent(`${name}_${String(number).padStart(2, "0")}`);
+  for (const ext of EXTENSIONS) {
+    if (await exists(base + ext)) return base + ext;
+  }
+  return null;
+}
+
+// Finds all files of a project (4 numbers at a time); the result is cached
+const mediaCache = {};
+function media(project) {
+  if (!mediaCache[project.slug]) {
+    mediaCache[project.slug] = (async () => {
+      const name = fileName(project.title);
+      const found = [];
+      for (let n = 1; n <= MAX_FILES; n += 4) {
+        const batch = await Promise.all([0, 1, 2, 3].map(k => findFile(name, n + k)));
+        for (const src of batch) {
+          if (!src) return found;
+          found.push(src);
+        }
+      }
+      return found;
+    })();
+  }
+  return mediaCache[project.slug];
+}
+
+function placeholder(src) {
+  const p = document.createElement("div");
+  p.className = "placeholder";
+  p.textContent = decodeURIComponent(src);
+  return p;
+}
+
+// Video: starts muted, loops forever, no controls – like a GIF
+function videoElement(src, alt) {
+  const v = document.createElement("video");
+  v.src = src;
+  v.muted = true;
+  v.defaultMuted = true;
+  v.loop = true;
+  v.autoplay = true;
+  v.playsInline = true;
+  v.preload = "auto";
+  v.setAttribute("muted", "");
+  v.setAttribute("playsinline", "");
+  v.setAttribute("aria-label", alt);
+  v.addEventListener("loadeddata", () => v.play().catch(() => {}));
+  v.addEventListener("error", () => v.replaceWith(placeholder(src)));
+  return v;
+}
+
+// Image or video, depending on the file extension
+function mediaElement(src, alt) {
+  if (src.toLowerCase().endsWith(".mp4")) return videoElement(src, alt);
+  const img = document.createElement("img");
+  img.src = src;
+  img.alt = alt;
+  img.loading = "lazy";
+  img.onerror = () => img.replaceWith(placeholder(src));
+  return img;
+}
+
+/* ---------- Left menu ---------- */
+projectList.innerHTML = projects.map(p =>
+  `<li><a href="#${p.slug}">${p.title}</a><span class="year">${p.year}</span></li>`
+).join("");
+
+// Split menu texts into single letters so they blur out of sync
+document.querySelectorAll(".sidebar a").forEach(a => {
+  const text = a.textContent;
+  a.setAttribute("aria-label", text);
+  a.textContent = "";
+  [...text].forEach(ch => {
+    const s = document.createElement("span");
+    s.className = "letter";
+    s.setAttribute("aria-hidden", "true");
+    s.textContent = ch;
+    s.style.setProperty("--delay", -(Math.random() * 2.4).toFixed(2) + "s");
+    a.appendChild(s);
+  });
+});
+
+// On phones the menu is fixed at the top: the content starts below it
+const sidebar = document.querySelector(".sidebar");
+function updateHeaderHeight() {
+  document.documentElement.style.setProperty("--header-height", sidebar.offsetHeight + "px");
+}
+window.addEventListener("resize", updateHeaderHeight);
+document.fonts?.ready.then(updateHeaderHeight);
+updateHeaderHeight();
+
+/* ---------- Start page: floating images ---------- */
+let floatRun = 0;      // increases on every page change and stops old animation loops
+let layer = 1;
+
+function startPage() {
+  const run = ++floatRun;
+  const area = document.createElement("div");
+  area.className = "float-area";
+  content.replaceChildren(area);
+  document.title = "patrick walter — architecture";
+
+  const height = () => area.clientHeight || window.innerHeight;
+  const avgDuration = (FLOAT.durationMin + FLOAT.durationMax) / 2;
+  let items = [];       // images currently on screen
+  let push = 0;         // extra speed from scrolling (px/s)
+  let distance = 0;     // distance travelled since the last new image
+  let pool = [];        // all images/videos found across all projects
+  let deck = [];        // shuffled deck: an image returns only after all others had their turn
+
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function nextMedia() {
+    const onScreen = new Set(items.map(item => item.src));
+    if (!deck.length) deck = shuffle([...pool]);
+    let i = deck.findIndex(m => !onScreen.has(m.src));   // never the same image twice at once
+    if (i < 0) i = 0;
+    return deck.splice(i, 1)[0];
+  }
+
+  // Finds a horizontal position where the new image covers the others as little as possible
+  function bestPosition(widthPct, y, heightPx) {
+    const areaWidth = area.clientWidth;
+    const w = areaWidth * widthPct / 100;
+    let best = 0, bestScore = Infinity;
+    for (let k = 0; k < 16; k++) {
+      const left = Math.random() * (areaWidth - w);
+      let score = 0;
+      items.forEach(item => {
+        const itemHeight = item.el.offsetHeight || item.estimate;
+        const overlapY = Math.min(y + heightPx, item.y + itemHeight) - Math.max(y, item.y);
+        const overlapX = Math.min(left + w, item.el.offsetLeft + item.el.offsetWidth) - Math.max(left, item.el.offsetLeft);
+        if (overlapX > 0 && overlapY > -heightPx * 0.5) score += overlapX * (overlapY + heightPx * 0.5);
+      });
+      if (score < bestScore) { bestScore = score; best = left; }
+    }
+    return best / areaWidth * 100;
+  }
+
+  function addImage(y) {
+    const { project, src } = nextMedia();
+    const a = document.createElement("a");
+    a.href = "#" + project.slug;
+    const widthPct = random(FLOAT.widthMin, FLOAT.widthMax);
+    const duration = random(FLOAT.durationMin, FLOAT.durationMax);
+    const estimate = area.clientWidth * widthPct / 100 * 0.75;   // height before the image has loaded
+    if (y === "top") y = -estimate - random(20, 80);
+    a.style.width = widthPct + "%";
+    a.style.left = bestPosition(widthPct, y, estimate) + "%";
+    a.style.zIndex = layer++;
+    const el = mediaElement(src, project.title);
+    el.loading = "eager";
+    a.appendChild(el);
+    const caption = document.createElement("span");
+    caption.className = "caption";
+    caption.textContent = project.title;
+    a.appendChild(caption);
+    area.appendChild(a);
+
+    const item = {
+      el: a, y, estimate, src,
+      speed: height() / duration,        // own speed in px/s
+      factor: avgDuration / duration,    // faster images react more strongly -> sense of depth
+      paused: false,
+      dragging: false
+    };
+    a.addEventListener("mouseenter", () => item.paused = true);
+    a.addEventListener("mouseleave", () => item.paused = false);
+
+    // Dragging with the mouse button held down
+    let drag = null;          // start data of the current drag
+    let moved = false;        // actually moved? then don't trigger a click
+    a.addEventListener("pointerdown", e => {
+      if (e.button !== 0 || e.pointerType === "touch") return;   // no dragging on phones
+      e.preventDefault();
+      a.setPointerCapture(e.pointerId);
+      drag = { x: e.clientX, y: e.clientY, startY: item.y, startLeft: a.offsetLeft };
+      moved = false;
+      item.dragging = true;
+      a.classList.add("dragging");
+      a.style.zIndex = layer++;             // grabbed image stays on top afterwards
+    });
+    a.addEventListener("pointermove", e => {
+      if (!drag) return;
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      if (Math.abs(dx) + Math.abs(dy) > 5) moved = true;
+      const areaWidth = area.clientWidth;
+      const left = Math.max(0, Math.min(areaWidth - a.offsetWidth, drag.startLeft + dx));
+      a.style.left = (left / areaWidth * 100) + "%";
+      item.y = drag.startY + dy;
+      a.style.transform = `translateY(${item.y}px)`;
+    });
+    const release = () => {
+      if (!drag) return;
+      drag = null;
+      item.dragging = false;
+      a.classList.remove("dragging");
+    };
+    a.addEventListener("pointerup", release);
+    a.addEventListener("pointercancel", release);
+    a.addEventListener("click", e => { if (moved) e.preventDefault(); });
+    a.addEventListener("dragstart", e => e.preventDefault());
+
+    a.style.transform = `translateY(${y}px)`;
+    items.push(item);
+    return item;
+  }
+
+  // Scrolling over the images pushes them up or down
+  area.addEventListener("wheel", e => {
+    e.preventDefault();
+    const d = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? height() : 1);
+    push = Math.max(-4000, Math.min(4000, push + d * FLOAT.scrollStrength));
+  }, { passive: false });
+
+  let last = performance.now();
+  function step(now) {
+    if (run !== floatRun) return;             // page changed -> stop this loop
+    const dt = Math.min((now - last) / 1000, 0.1);
+    last = now;
+    const h = height();
+    const baseSpeed = reducedMotion ? 0 : h / avgDuration;
+
+    items.forEach(item => {
+      if (item.dragging) return;              // being dragged -> don't move
+      const own = (item.paused || reducedMotion) ? 0 : item.speed;
+      item.y -= (own + push * item.factor) * dt;
+      item.el.style.transform = `translateY(${item.y}px)`;
+    });
+
+    // New images: from below when moving up – from above when scrolling back
+    distance += (baseSpeed + push) * dt;
+    const gapPx = (h / avgDuration) * FLOAT.gap;
+    while (distance >= gapPx) { addImage(h + random(0, 60)); distance -= gapPx; }
+    while (distance <= -gapPx) { addImage("top"); distance += gapPx; }
+
+    // Remove images that have left the area
+    items = items.filter(item => {
+      const itemHeight = item.el.offsetHeight || item.estimate;
+      const gone = !item.dragging && (item.y + itemHeight < -120 || item.y > h + 200);
+      if (gone) item.el.remove();
+      return !gone;
+    });
+
+    push *= Math.pow(1 - FLOAT.scrollGlide, dt * 2);
+    if (Math.abs(push) < 1) push = 0;
+    requestAnimationFrame(step);
+  }
+
+  // First find all files, then start
+  Promise.all(projects.map(project => media(project).then(list => list.map(src => ({ project, src })))))
+    .then(lists => {
+      if (run !== floatRun) return;
+      pool = lists.flat();
+      if (!pool.length) return;
+      // spread evenly over the height at the start
+      for (let i = 0; i < FLOAT.startCount; i++)
+        addImage((i + random(0.1, 0.6)) / FLOAT.startCount * height());
+      last = performance.now();
+      requestAnimationFrame(step);
+    });
+}
+
+/* ---------- Project pages ---------- */
+
+// Seeded random numbers: every project always gets the same layout
+function seededRandom(text) {
+  let s = 0;
+  for (const c of text) s = (s * 31 + c.charCodeAt(0)) >>> 0;
+  return () => {
+    s = (s + 0x6D2B79F5) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+let observer = null;
+let collageLayer = 100;
+
+/* ---------- Full view (lightbox) ---------- */
+const lightbox = document.createElement("div");
+lightbox.className = "lightbox";
+lightbox.innerHTML = `
+  <div class="lb-title"></div>
+  <button class="close" type="button">close</button>
+  <div class="stage"></div>
+  <div class="zone prev" aria-label="previous image"></div>
+  <div class="zone next" aria-label="next image"></div>
+  <div class="counter"></div>`;
+document.body.appendChild(lightbox);
+const lbStage = lightbox.querySelector(".stage");
+const lbCounter = lightbox.querySelector(".counter");
+const lbTitle = lightbox.querySelector(".lb-title");
+let lbList = [], lbIndex = 0, lbAlt = "";
+
+function openLightbox(list, index, title) {
+  lbList = list;
+  lbAlt = title;
+  lbTitle.textContent = title;
+  lightbox.classList.add("open");
+  document.body.classList.add("lightbox-open");
+  showInLightbox(index);
+}
+
+function showInLightbox(index) {
+  lbIndex = (index + lbList.length) % lbList.length;   // wraps around at both ends
+  const el = mediaElement(lbList[lbIndex], lbAlt);
+  el.loading = "eager";
+  lbStage.replaceChildren(el);
+  lbCounter.textContent = `${lbIndex + 1} / ${lbList.length}`;
+}
+
+function closeLightbox() {
+  lightbox.classList.remove("open");
+  document.body.classList.remove("lightbox-open");
+  lbStage.replaceChildren();
+}
+
+// Computer: click on the left or right half
+lightbox.querySelector(".zone.prev").addEventListener("click", () => showInLightbox(lbIndex - 1));
+lightbox.querySelector(".zone.next").addEventListener("click", () => showInLightbox(lbIndex + 1));
+lightbox.querySelector(".close").addEventListener("click", closeLightbox);
+
+// Keyboard: arrow keys and Escape
+document.addEventListener("keydown", e => {
+  if (!lightbox.classList.contains("open")) return;
+  if (e.key === "ArrowRight") showInLightbox(lbIndex + 1);
+  if (e.key === "ArrowLeft") showInLightbox(lbIndex - 1);
+  if (e.key === "Escape") closeLightbox();
+});
+
+// Phone: swipe left = next image, swipe right = previous image
+let touchStart = null;
+lightbox.addEventListener("touchstart", e => {
+  touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+}, { passive: true });
+lightbox.addEventListener("touchend", e => {
+  if (!touchStart) return;
+  const dx = e.changedTouches[0].clientX - touchStart.x;
+  const dy = e.changedTouches[0].clientY - touchStart.y;
+  touchStart = null;
+  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+    e.preventDefault();                       // no extra tap after a swipe
+    showInLightbox(lbIndex + (dx < 0 ? 1 : -1));
+  }
+});
+
+// Makes an image on the project page draggable with the mouse
+function makeDraggable(figure, collage) {
+  let drag = null;
+  let dx = 0, dy = 0;          // current offset
+  figure.addEventListener("pointerdown", e => {
+    if (e.button !== 0 || e.pointerType === "touch") return;
+    e.preventDefault();
+    figure.setPointerCapture(e.pointerId);
+    figure.moved = false;
+    drag = { x: e.clientX, y: e.clientY, dx, dy, baseLeft: figure.offsetLeft - dx };
+    figure.classList.add("dragging");
+    figure.style.zIndex = ++collageLayer;      // stays on top afterwards
+  });
+  figure.addEventListener("pointermove", e => {
+    if (!drag) return;
+    if (Math.abs(e.clientX - drag.x) + Math.abs(e.clientY - drag.y) > 5) figure.moved = true;
+    const maxLeft = collage.clientWidth - figure.offsetWidth;
+    const newLeft = Math.max(0, Math.min(maxLeft, drag.baseLeft + drag.dx + (e.clientX - drag.x)));
+    dx = newLeft - drag.baseLeft;
+    dy = drag.dy + (e.clientY - drag.y);
+    figure.style.transform = `translate(${dx}px, ${dy}px)`;
+  });
+  const release = () => { drag = null; figure.classList.remove("dragging"); };
+  figure.addEventListener("pointerup", release);
+  figure.addEventListener("pointercancel", release);
+  figure.addEventListener("dragstart", e => e.preventDefault());
+}
+
+function projectPage(project) {
+  const header = document.createElement("div");
+  header.className = "project-header";
+  const meta = [project.year, project.place, project.context].filter(Boolean).join(", ");
+  header.innerHTML = `<h2>${project.title}</h2><div class="meta">${meta}</div>${project.text ? `<p>${project.text}</p>` : ""}`;
+
+  const rnd = seededRandom(project.slug);
+  const between = (min, max) => min + rnd() * (max - min);
+  const collage = document.createElement("div");
+  collage.className = "collage";
+  content.replaceChildren(header, collage);
+  document.title = project.title + " — patrick walter";
+
+  media(project).then(list => {
+    if (location.hash.slice(1) !== project.slug) return;   // another page was opened meanwhile
+    list.forEach((src, i) => {
+      const figure = document.createElement("figure");
+      // alternating: more to the left, more to the right
+      const pos = i % 2 === 0 ? between(0, 0.35) : between(0.65, 1);
+      figure.style.setProperty("--w", between(COLLAGE.widthMin, COLLAGE.widthMax) + "%");
+      figure.style.setProperty("--pos", pos);
+      figure.style.setProperty("--overlap", between(COLLAGE.overlapMin, COLLAGE.overlapMax) + "%");
+      figure.style.zIndex = i + 1;
+      figure.appendChild(mediaElement(src, project.title));
+      makeDraggable(figure, collage);
+      // click without dragging opens the full view
+      figure.addEventListener("click", () => {
+        if (figure.moved) { figure.moved = false; return; }
+        openLightbox(list, i, project.title);
+      });
+      collage.appendChild(figure);
+    });
+
+    // Appear while scrolling
+    if (observer) observer.disconnect();
+    observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -12% 0px" });
+    collage.querySelectorAll("figure").forEach(f => observer.observe(f));
+  });
+}
+
+/* ---------- Info and imprint ---------- */
+function textPage(html, title) {
+  const div = document.createElement("div");
+  div.className = "info";
+  div.innerHTML = html;
+  content.replaceChildren(div);
+  document.title = title + " — patrick walter";
+}
+
+/* ---------- Navigation ---------- */
+function route() {
+  floatRun++;
+  closeLightbox();
+  const slug = decodeURIComponent(location.hash.slice(1));
+  document.querySelectorAll(".sidebar a").forEach(a =>
+    a.classList.toggle("active", a.getAttribute("href") === "#" + slug && slug !== ""));
+  const project = projects.find(p => p.slug === slug);
+  if (project) projectPage(project);
+  else if (slug === "info") textPage(infoHTML, "info");
+  else if (slug === "imprint") textPage(imprintHTML, "imprint");
+  else startPage();
+  // compact menu on phones for every page except the start page
+  document.body.classList.toggle("subpage", slug !== "");
+  updateHeaderHeight();
+  window.scrollTo(0, 0);
+}
+
+window.addEventListener("hashchange", route);
+route();
+</script>
+</body>
 </html>
