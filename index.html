@@ -103,8 +103,7 @@
     margin-top: calc(var(--overlap) * -1);
   }
   .collage figure:first-child { margin-top: 0; }
-  .collage figure:hover { z-index: 999 !important; }
-  .collage img, .collage video, .collage .placeholder { width: 100%; height: auto; display: block; }
+  .collage img, .collage video, .collage .placeholder { width: 100%; height: auto; max-height: 85vh; object-fit: contain; object-position: left; display: block; }   /* max-height: tallest an image can get */
 
   /* Images appear while scrolling */
   .collage figure {
@@ -259,7 +258,7 @@
   <ul class="project-list" id="project-list"></ul>
   <nav class="footer-nav">
     <a href="#info">info</a>
-    <a href="https://www.instagram.com/" target="_blank" rel="noopener">instagram</a>
+    <a href="https://www.instagram.com/patrick.wa/" target="_blank" rel="noopener">instagram</a>
     <a href="#imprint">imprint</a>
   </nav>
 </aside>
@@ -342,21 +341,21 @@ const imprintHTML = `
 
 /* Settings for the floating images on the start page */
 const FLOAT = {
-  gap: 7,             // roughly every how many seconds a new image appears
+  gap: 12,            // roughly every how many seconds a new image appears
   durationMin: 32,    // minimum seconds an image needs to cross the screen
   durationMax: 42,    // … and maximum (similar speeds = less overtaking and overlap)
   widthMin: 32,       // image width in % of the right-hand area
   widthMax: 52,
-  startCount: 4,      // how many images are already on screen when the page loads
+  startCount: 3,      // how many images are already on screen when the page loads
   scrollStrength: 6,  // how strongly scrolling pushes the images
   scrollGlide: 0.9    // 0 = stops immediately, closer to 1 = glides on longer
 };
 
 /* Settings for the collage on project pages */
 const COLLAGE = {
-  widthMin: 45,       // image width in % of the right-hand area
-  widthMax: 72,
-  overlapMin: 4,      // overlap with the image above, in % of the area width
+  widthMin: 38,       // image width in % of the right-hand area
+  widthMax: 58,
+  overlapMin: -3,      // overlap with the image above, in % of the area width
   overlapMax: 12
 };
 
