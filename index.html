@@ -1,0 +1,1508 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>patrick walter — architecture</title>
+<meta name="description" content="Patrick Walter – architecture portfolio. Graduate of the Technical University of Munich (TUM).">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="favicon.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Patrick Walter",
+  "url": "https://patrickarchive.com/",
+  "jobTitle": "M.A. Architecture",
+  "alumniOf": {
+    "@type": "CollegeOrUniversity",
+    "name": "Technical University of Munich",
+    "alternateName": "TUM"
+  },
+  "sameAs": ["https://www.instagram.com/patrick.wa/"]
+}
+</script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --text: #111111;
+    --muted: #8a8a8a;
+    --placeholder: #f1f0ee;
+    --sidebar: 300px;
+    --gap: 24px;
+    --blur: 3px;                             /* strength of the menu blur */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    text-transform: lowercase;
+  }
+  a { color: inherit; text-decoration: none; text-underline-offset: 3px; }
+
+  /* ---------- Menu blur ----------
+     Every word in the menu sits in <span class="blur">. It is blurred
+       mouse: while hovering (see "Mouse" at the end)  ·  touch: briefly after a tap (see "Touch")
+     The whole word is blurred with a filter; the bezier curve starts gently, speeds up and settles softly.
+     Safari cuts a blur off at the edge of its box once it has settled, so the box has 10px of extra
+     room all around (padding), which the negative margin takes back out of the layout.
+     pointer-events: none keeps that extra room from catching the mouse. */
+  .blur {
+    display: inline-block;
+    padding: 10px;
+    margin: -10px;
+    pointer-events: none;
+    filter: blur(0px);
+    transition: filter .6s cubic-bezier(0.25, 1, 0.4, 1);   /* .6s = how long the blur takes to come and go */
+  }
+  a.active .blur { text-decoration: underline; }   /* the page that is open right now; the underline blurs along */
+
+  /* ---------- Left column ---------- */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: var(--sidebar);
+    padding: var(--gap);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .name { font-size: 14px; font-weight: normal; margin-bottom: 2px; }
+  .subtitle { color: var(--muted); margin-bottom: 40px; }
+  .subtitle .toggle { display: none; }               /* + / − only in the upright layout */
+  .project-list { list-style: none; flex: 1; }
+  .project-list li { display: flex; justify-content: space-between; gap: 12px; }
+  .project-list .year { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .footer-nav { margin-top: 40px; display: flex; flex-direction: column; }
+  .footer-nav a { width: fit-content; }
+
+  /* ---------- Right side ---------- */
+  main {
+    margin-left: var(--sidebar);
+    padding: var(--gap) var(--gap) var(--gap) 0;
+    min-height: 100vh;
+  }
+  .project-header { max-width: 640px; margin-bottom: 40px; }
+  .project-header h2 { font-size: 14px; font-weight: normal; }
+  .project-header .meta { color: var(--muted); margin-bottom: 16px; text-transform: none; }   /* shown exactly as written */
+  .project-header p { text-transform: none; }
+  .placeholder {
+    aspect-ratio: 3 / 2;
+    background: var(--placeholder);
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: none;
+    font-size: 12px;
+  }
+
+  /* Project page: every image sits at the highest free spot, loosely offset (positions are computed by the script) */
+  .collage { position: relative; margin-bottom: 80px; }
+  .collage figure {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--w);
+    cursor: pointer;                         /* click opens the full view */
+    user-select: none; -webkit-user-select: none;
+    /* images appear while scrolling */
+    opacity: 0;
+    translate: 0 60px;                       /* distance they glide up */
+    filter: blur(8px);                       /* starting blur */
+    transition: opacity 1.2s ease, translate 1.2s ease, filter 1.2s ease;   /* duration */
+  }
+  .collage figure.visible { opacity: 1; translate: 0 0; filter: blur(0); }
+  .collage figure:has(video),
+  .collage figure.visible:has(video) { filter: none; }   /* no blur on videos: it can cause black boxes */
+  @media (prefers-reduced-motion: reduce) {
+    .collage figure { translate: none; filter: none; transition: opacity .6s ease; }
+  }
+
+  .collage img, .collage video, .collage .placeholder { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .collage img, .collage video { pointer-events: none; -webkit-user-drag: none; }
+
+  /* Full view (lightbox) on project pages */
+  .lightbox {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    left: var(--sidebar);                    /* covers the whole right side */
+    background: var(--bg);
+    z-index: 20000;
+    display: none;
+    touch-action: none;                      /* touch: the page handles swipe and zoom itself */
+    overflow: hidden;
+  }
+  .lightbox.open { display: block; }
+  .lightbox .stage.snap { transition: transform .22s ease, opacity .22s ease; }   /* slide after a swipe */
+  .lightbox .stage .zoom-anim { transition: transform .25s ease; }                /* double-tap zoom */
+  .lightbox .stage {
+    position: absolute;
+    inset: 56px var(--gap) 56px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lightbox .stage img, .lightbox .stage video, .lightbox .stage .placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;                     /* as large as possible, never cropped */
+    display: block;
+    animation: lightbox-in .35s ease;
+  }
+  @keyframes lightbox-in { from { opacity: 0; } to { opacity: 1; } }
+  .lightbox .close, .lightbox .counter { position: absolute; z-index: 2; }
+  .lightbox .close {
+    top: var(--gap); right: var(--gap);
+    background: none; border: 0; font: inherit; color: inherit;
+    cursor: pointer; padding: 0;
+  }
+  .lightbox .counter { bottom: var(--gap); right: var(--gap); color: var(--muted); }
+  .lightbox .lb-title { position: absolute; z-index: 2; top: var(--gap); left: 0; }
+  body.lightbox-open { overflow: hidden; }
+
+  /* Mouse: full view, one image at a time; scrolling turns the page */
+  .lightbox .strip {
+    position: absolute;
+    inset: 56px 0;
+    overflow: hidden;
+  }
+  .lightbox .track {
+    display: flex;
+    height: 100%;
+    transition: transform .5s cubic-bezier(.2, .7, .2, 1);   /* speed of turning */
+    will-change: transform;
+  }
+  .lightbox:not(.strip-mode) .strip,
+  .lightbox.strip-mode .stage { display: none; }
+  .lightbox .strip .slide {                  /* one page per image, as wide as the visible area */
+    flex: 0 0 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lightbox .strip .frame {
+    max-height: 100%;
+    overflow: hidden;                        /* zoom stays inside the image frame */
+    cursor: zoom-in;
+  }
+  .lightbox .strip .frame.zoomed { cursor: zoom-out; }
+  .lightbox .strip .frame img,
+  .lightbox .strip .frame video {
+    width: auto;
+    height: auto;
+    max-height: calc(100vh - 112px);         /* as tall as the space allows … */
+    max-width: calc(100vw - var(--sidebar) - 2 * var(--gap));   /* … and as wide */
+    display: block;
+    transition: transform .35s ease;         /* speed of the click zoom */
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+  .lightbox .strip .frame .placeholder { height: calc(100vh - 112px); width: auto; }
+
+  /* Info page */
+  .info { max-width: 560px; text-transform: none; }
+  .info p { margin-bottom: 1em; }
+  .info h2 { font-size: 14px; font-weight: normal; text-transform: lowercase; margin: 2em 0 0.5em; }
+  /* CV: years on the left (grey), entry on the right */
+  .cv { list-style: none; }
+  .cv li { display: grid; grid-template-columns: 90px 1fr; gap: 12px; }
+  .cv .year { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .info .contact { margin-top: 1em; }   /* same gap as between the lines on the imprint page */
+
+  /* ---------- Start page: floating images ---------- */
+  .float-area {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    left: var(--sidebar);
+    overflow: hidden;
+  }
+  .float-area a {
+    position: absolute;
+    top: 0;
+    will-change: transform;
+  }
+  .float-area img, .float-area video { -webkit-user-drag: none; pointer-events: none; }
+  .float-area img, .float-area video, .float-area .placeholder { width: 100%; height: auto; display: block; }
+  .float-area .caption {
+    position: absolute;
+    left: 0; bottom: -20px;
+    opacity: 0;
+    transition: opacity .2s;
+    white-space: nowrap;
+  }
+
+  /* =================== The four versions ===================
+     Input   mouse  = (hover: hover)   touch = (hover: none)        (same as isTouch in the script)
+     Layout  wide    = bar on the left: computers, and phones turned sideways
+             upright = menu at the top: the window is at most 760px wide AND at least 480px tall
+                       (same as UPRIGHT in the script). A phone turned sideways is too low for it.
+     So: mouse + wide, mouse + upright (narrow window), touch + upright (phone), touch + wide (phone sideways, tablet) */
+
+  /* ---------- Mouse ---------- */
+  @media (hover: hover) {
+    main a:hover, .lightbox .close:hover { text-decoration: underline; }   /* menu links: blur instead of underline */
+    .sidebar a:hover .blur { filter: blur(var(--blur)); }
+    /* start page: hovered image comes to the front with its caption; images can be dragged */
+    .float-area a { cursor: grab; user-select: none; -webkit-user-select: none; }
+    .float-area a:hover { z-index: 9999 !important; text-decoration: none; }
+    .float-area a:hover .caption { opacity: 1; }
+    .float-area a.dragging { cursor: grabbing; z-index: 10000 !important; }
+    /* upright layout (narrow window): "archive" blurs like the links */
+    @media (max-width: 760px) and (min-height: 480px) {
+      .subtitle:hover .blur { filter: blur(var(--blur)); }
+    }
+  }
+
+  /* ---------- Touch ----------
+     No hover effects at all: touchscreens keep the "hover" after a tap, so they would stay switched on. */
+  @media (hover: none) {
+    /* a tap blurs briefly: the script sets .tap-blur for a moment, the transition fades it in and out */
+    .blur.tap-blur { filter: blur(var(--blur)); }
+    .float-area { touch-action: none; }        /* start page: the page handles swiping itself */
+    /* phone turned sideways: the full view covers the whole display */
+    @media (max-height: 479px) {
+      .lightbox { left: 0; }
+      .lightbox .stage { inset: 40px 16px; }
+      .lightbox .close { top: 12px; right: 16px; }
+      .lightbox .counter { bottom: 12px; right: 16px; }
+      .lightbox .lb-title { top: 12px; left: 16px; }
+    }
+  }
+
+  /* ---------- Wide layout on low screens (phone turned sideways): narrower bar, smaller gaps ---------- */
+  @media (max-height: 479px) {
+    :root { --sidebar: 220px; }
+    .subtitle { margin-bottom: 20px; }
+    .footer-nav { margin-top: 20px; }
+  }
+
+  /* ---------- Upright layout ---------- */
+  @media (max-width: 760px) and (min-height: 480px) {
+    /* Menu stays fixed at the top, with a soft shadow below that moves along when the list opens or closes */
+    .sidebar {
+      right: 0; bottom: auto;
+      width: auto;
+      padding: 16px;
+      overflow: visible;
+      background: var(--bg);
+      z-index: 50;
+      box-shadow: 0 2px 14px rgba(0, 0, 0, 0.09);   /* last value = strength of the shadow */
+      transition: box-shadow .25s ease;
+    }
+    .sidebar.flat { box-shadow: none; transition: none; }   /* project page at the very top: shadow disappears at once (it only fades in) */
+    .subtitle { margin-bottom: 20px; }
+    /* info, instagram, imprint at the top right */
+    .footer-nav {
+      position: absolute;
+      top: 16px; right: 16px;
+      margin: 0;
+      flex-direction: row;
+      gap: 0 14px;
+    }
+    main {
+      position: relative;
+      z-index: 0;                            /* keeps dragged images below the menu */
+      margin-left: 0;
+      padding: calc(var(--header-height, 200px) + 24px) 16px 16px;
+    }
+    .float-area { left: 0; }
+    /* Full view covers the whole display */
+    .lightbox { left: 0; }
+    .lightbox .stage { inset: 56px 16px; }
+    .lightbox .strip .frame img,
+    .lightbox .strip .frame video { max-width: calc(100vw - 32px); }   /* mouse in a narrow window: full width */
+    .lightbox .close { top: 16px; right: 16px; }
+    .lightbox .counter { bottom: 16px; right: 16px; }
+    .lightbox .lb-title { top: 16px; left: 16px; }
+    /* Collapsible project list: the script sets height and opacity while you swipe */
+    /* clipped only top and bottom (for folding); 10px extra room so the blur of the first and last word isn't cut */
+    .project-list { overflow-x: visible; overflow-y: clip; padding-block: 10px; margin-block: -10px; }
+    .subtitle .toggle { display: inline-grid; margin-left: 0.35em; }   /* distance between "archive" and + / − */
+    .subtitle .toggle > span { grid-area: 1 / 1; text-align: center; }
+    .subtitle { cursor: pointer; width: fit-content; }
+    .sidebar.menu-anim .project-list,
+    .sidebar.menu-anim .subtitle,
+    .sidebar.menu-anim .subtitle .toggle > span { transition: max-height .3s ease, opacity .3s ease, margin .3s ease; }
+  }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <h1 class="name"><a href="#"><span class="blur">patrick walter</span></a></h1>
+  <div class="subtitle" id="subtitle" role="button"><span class="blur">archive</span><span class="toggle" aria-hidden="true"><span class="sign-open">−</span><span class="sign-closed">+</span></span></div>
+  <ul class="project-list" id="project-list"></ul>
+  <nav class="footer-nav">
+    <a href="#info"><span class="blur">info</span></a>
+    <a href="https://www.instagram.com/patrick.wa/" target="_blank" rel="noopener"><span class="blur">instagram</span></a>
+    <a href="#imprint"><span class="blur">imprint</span></a>
+  </nav>
+</aside>
+
+<main id="content"></main>
+
+<!-- Opened locally (double-click): layout.js, written by the gallery editor, contains the
+     arrangement and the list of all files, because browsers don't let local pages load layout.json -->
+<script>if (location.protocol === "file:") document.write('<script src="layout.js"><\/script>');</script>
+
+<script>
+/* =========================================================
+   PROJECTS — this is where you maintain your content.
+   New project: copy a block and change the values.
+
+   Every project gets a subfolder inside  assets/ , named after the
+   project title (spaces become _ , special characters like [ ] are
+   dropped: "salt [a]way" -> assets/salt_away/ ). The image and video
+   files inside can have any name (.jpg, .png, .webp, .mp4).
+   Videos play muted in an endless loop.
+
+   GALLERY EDITOR: open editor.html (in Chrome or Edge) to arrange and size
+   the images of each project. It saves layout.json, which this page reads.
+   Images that are not arranged yet appear one below the other,
+   exactly as the editor shows them before you arrange them.
+   ========================================================= */
+const projects = [
+  {
+    slug: "alors-on-danse",
+    title: "alors on danse",
+    year: "2026",
+    place: "Brussels",
+    context: "thesis project at TUM, Prof. Stephen Bates",
+    text: "What if the thing keeping you awake at night was the thing keeping your home warm?<br><br>Clubs are often seen as a problem for residential life: too loud, too late, too disruptive. This proposal turns that relationship around. It converts a European office building in Brussels into housing with alternative forms of living and puts a club in the underground parking garage below.<br>The building becomes a living labyrinth where residents, commuters from the Maelbeek metro station and clubgoers share paths and thresholds at different times of day and night. The apartments are organised around a compact core, and the old office partitions are reused as dividing walls. Curtains and seasonal buffer zones let residents adapt their homes throughout the year.<br>For the club, part of the slab between two garage levels is removed, and the concrete gained is reused to build the club's walls. Heat from the dance floor is stored in a thermal buffer tank behind the DJ booth and heats the apartments after closing time.<br>Nothing is simply demolished.<br><br>Dancing becomes heat. Heat becomes dwelling. And what was once perceived as unpleasant and disruptive becomes the motor of the home."
+  },
+  {
+    slug: "house-of-metal",
+    title: "house of metal",
+    year: "2025/26",
+    place: "Munich",
+    context: "3rd year master project at TUM, Prof. Uta Graff<br>with Hendrik Schmiemann",
+    text: "A House of Metal Crafts is to be built on the site of a former railway works. It will offer space for artists and craftspeople as well as exhibition rooms. The site is an island within an extensive track bed, and visitors can reach it only through an underpass.<br><br>The design is meant to act as an architectural interface between craft, building and visitor.<br><br>It follows the logic of this unusual site and makes the underground arrival its central theme. The existing building is kept and upgraded. It mediates between two new buildings: a workshop to the west and an exhibition house to the east. Both are reached through newly created, sheltering trenches.<br><br>Conceptually, the architecture also makes space through subtraction and addition. Newly built functional cores, and thick walls open up served spaces for working and making while housing the buildings servant spaces."
+  },
+  {
+    slug: "lamina",
+    title: "lamina",
+    year: "2025/26",
+    place: "Door handle, cast bronze",
+    context: "3rd year master seminar at TUM, Prof. Uta Graff<br>with Hendrik Schmiemann",
+    text: "Lamina is a cast bronze door handle, made in collaboration with local craft businesses.<br>Production began with laser-cut cardboard layers, glued one on top of the other. Wax sprues were attached to the cardboard model, which was then invested in fireclay. Over several days in the kiln, the cardboard and wax burned out completely.<br>Molten bronze was poured through the channels the wax had left behind. Once it had cooled, the casting was freed from its sprues. Finally, the handle was sandblasted and patinated with liver of sulphur.<br>Its surface still shows every layer of the original model."
+  },
+  {
+    slug: "salt-away",
+    title: "salt [a]way",
+    year: "2024",
+    place: "Cyprus",
+    context: "1st year master project at TUM, Prof. Francis Kéré<br>with Hanna Panschar & Bertram Dietz",
+    text: "The design is an alternative to conventional desalination plants, which use large amounts of energy mostly generated from fossil fuels. Cyprus serves as the site for our case-study since it is the island with the highest dependence on sea water desalination in Europe. Our plant runs on solar heat alone and produces clean drinking water. We also looked at how to use brine, the waste product of desalination. In our design, it becomes the building material for salt panels used on the façade. Besides their distinctive look, the panels improve the indoor climate, are highly fire-resistant and have good acoustic properties.<br>Inside the circular breakwater, seawater evaporates under direct sunlight in floating modules. The distilled water is collected and enriched with minerals in a treatment plant so it can be used as drinking water. In our case study, the system is designed to cover the entire freshwater demand of a neighbouring hotel.<br>Thermal desalination produces highly concentrated brine. Conventional plants pump it back into the sea, where it upsets the balance of the ecosystem. In our design, the brine is pumped from the floating modules into knee-deep pools on land. Stainless steel frames are placed in these pools, and after 15 days in direct sunlight, salt crystals have formed on them. The frames are then swapped for new ones, and the crystal-covered frames are worked into custom-fitted panels in a workshop.<br>The panels then dry for three months in a continuous system that runs in a full circle along a walkway. Built on top of the breakwater, the walkway is used for drying the panels and also extends the beach promenade for tourists and visitors."
+  },
+  {
+    slug: "cool-lab",
+    title: "cool lab",
+    year: "2024",
+    place: "TUM Campus",
+    context: "1st year master seminar at TUM, Prof. Francis Kéré, Inês Dantas<br>team of 12 students",
+    text: "The task was to design a pavilion with a cooling effect, develop it in detail and build it on the TUM campus for one day. Twelve students had eight weeks, from April to June 2024, supervised by Inês Dantas. Along with the design, we raised all the funding ourselves and ran simulations to prove the cooling effect.<br><br>The pavilion offered a generous seating area and combined several cooling methods for hot summer days. Textile sunshades blocked direct sunlight. A tubing system sprayed a fine mist of water along the top edge of the fabric to keep it wet. The people sitting on the platform generated the pressure themselves, with a bike pump built into the seating and a small pressure tank."
+  },
+  {
+    slug: "la-rotante",
+    title: "la rotante",
+    year: "2023/24",
+    place: "",
+    context: "1st year master seminar at TUM, integrated product design<br>with Mia Schury & Clelia Veith",
+    text: "An honest, simple, and durable design. Crafted from a single sheet of raw aluminium, La Rotante reveals its materiality and manufacturing process at first glance.Its minimalist form streamlines production in just a few steps, starting with precision-cut aluminum by a water jet, followed by folding and hand assembly using a hammer and pins, all without welding joints. With a cut-out circle serving as a versatile lampshade, simply rotate it to create direct or indirect light according to your needs."
+  },
+];
+
+/* Texts for the info and imprint pages */
+const infoHTML = `
+  <h2>Architecture means...</h2>
+  <p>much more than designing a beautiful building. It means responsibility, because it surrounds us every day. It plays a vital role in creating and restoring social relationships.<br>I am particularly interested in building within the existing fabric, which I believe is one of the most important tasks of our time. It means rethinking what is already there and finding new and different ways to use it, weaving together materials and uses and giving them new meaning.</p>
+  <h2>education</h2>
+  <ul class="cv">
+    <li><span class="year">2023–2026</span><span>M.A. Architecture, Technical University of Munich</span></li>
+    <li><span class="year">2024–2025</span><span>M.A. Architecture, Universidade de Lisboa</span></li>
+    <li><span class="year">2019–2022</span><span>B.Sc. Architecture and Urban Planning, University of Stuttgart</span></li>
+    <li><span class="year">2017–2019</span><span>B.Sc. Civil Engineering, University of Stuttgart</span></li>
+    <li><span class="year">2009–2017</span><span>Abitur, Remstal-Gymnasium, Weinstadt</span></li>
+  </ul>
+
+  <h2>experience</h2>
+  <ul class="cv">
+    <li><span class="year">2025–2026</span><span>Student assistant, Design Factory, Technical University of Munich</span></li>
+    <li><span class="year">2022–2023</span><span>Internship, Delugan Meissl Associated Architects, Vienna</span></li>
+    <li><span class="year">2021–2022</span><span>Tutor in structural design, ITKE, University of Stuttgart</span></li>
+    <li><span class="year">2019</span><span>Internship, W67 Architekten, Stuttgart</span></li>
+    <li><span class="year">2018–2025</span><span>Internship, semester-break job, Carpentry Wiegmann GmbH, Kernen</span></li>
+    <li><span class="year">2016–2022</span><span>IT assistant, AVL IT GmbH, Weinstadt</span></li>
+    <li><span class="year">2014</span><span>Internship, blocher partners, Stuttgart</span></li>
+  </ul>
+
+  <h2>exhibitions</h2>
+  <ul class="cv">
+    <li><span class="year">2025</span><span>Water Futures, Pavillon 333, Technical University of Munich</span></li>
+    <li><span class="year">2025</span><span>Water Futures, ZAZ Bellerive – Architecture Center Zurich</span></li>
+  </ul>
+
+  <p class="contact">contact: <a href="mailto:mail@patrickarchive.com">mail@patrickarchive.com</a></p>
+`;
+const imprintHTML = `
+  <h2>imprint (impressum)</h2>
+  <p>Information according to § 5 DDG<br>
+  Patrick Walter<br>
+  Germany</p>
+  <p class="contact">contact: <a href="mailto:mail@patrickarchive.com">mail@patrickarchive.com</a></p>
+`;
+
+/* Settings for the floating images on the start page */
+const FLOAT = {
+  gap: 6,            // roughly every how many seconds a new image appears
+  gapMobile: 6,       // same in the upright layout (phone held upright, narrow window; smaller = denser)
+  startCountMobile: 5,// images on screen when the page loads, upright layout
+  durationMin: 20,    // minimum seconds an image needs to cross the screen
+  durationMax: 35,    // … and maximum (similar speeds = less overtaking and overlap)
+  widthMin: 15,       // image width in % of the right-hand area, wide layout
+  widthMax: 35,
+  widthMinMobile: 32, // the same in the upright layout
+  widthMaxMobile: 52,
+  startCount: 4,      // how many images are already on screen when the page loads
+  scrollStrength: 6,  // how strongly scrolling pushes the images
+  scrollGlide: 0.9    // 0 = stops immediately, closer to 1 = glides on longer
+};
+
+/* Images that are not arranged in the editor yet (must match NEW_WIDTH in editor.html) */
+const COLLAGE = {
+  newWidth: 45        // width (% of the image area) of images not arranged yet
+};
+
+/* ================= no need to change anything below ================= */
+const ASSET_FOLDER = "assets";
+const EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".mp4"];
+
+const projectList = document.getElementById("project-list");
+const content = document.getElementById("content");
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const random = (min, max) => min + Math.random() * (max - min);
+// The four versions (same values as at the end of the style section):
+// layout upright (menu at the top) or wide (bar on the left) × input touch or mouse
+const UPRIGHT = "(max-width: 760px) and (min-height: 480px)";
+const isUpright = () => window.matchMedia(UPRIGHT).matches;
+const isTouch = () => window.matchMedia("(hover: none)").matches;
+
+// File name from the title: spaces -> _, special characters like [ ] are dropped
+function fileName(title) {
+  return title.trim().replace(/\s+/g, "_").replace(/[^\p{L}\p{N}_-]/gu, "");
+}
+
+// List of all files, written automatically by GitHub on every push (assets.json).
+// Online the site reads only this one file instead of searching for every image.
+// Locally (or if it is missing) the list from layout.js is used instead.
+function loadJSON(file, local) {
+  const fallback = () => local() || null;
+  return location.protocol.startsWith("http")
+    ? fetch(file, { cache: "no-cache" }).then(r => r.ok ? r.json() : fallback()).catch(fallback)
+    : Promise.resolve(fallback());
+}
+const manifest = loadJSON("assets.json", () => window.LOCAL_ASSETS);
+// Arrangement made with the gallery editor (editor.html)
+const layoutData = loadJSON("layout.json", () => window.LOCAL_LAYOUT);
+
+const encodePath = path => path.split("/").map(encodeURIComponent).join("/");
+async function savedLayout(project) {
+  const data = await layoutData;
+  return (data && data.projects && data.projects[fileName(project.title)]) || null;
+}
+const fileOf = src => decodeURIComponent(src.split("/").pop());
+// files in the order arranged in the editor: top to bottom, then left to right
+const arrangedFiles = saved => saved.desktop.slice().sort((a, b) => a.y - b.y || a.x - b.x).map(e => e.file);
+
+// Finds all files of a project; the result is cached
+const mediaCache = {};
+function media(project) {
+  if (!mediaCache[project.slug]) {
+    mediaCache[project.slug] = (async () => {
+      const name = fileName(project.title);
+      const files = await manifest;
+      const saved = await savedLayout(project);
+
+      // 1. Online: every image or video in the project folder counts, whatever its name
+      if (files) {
+        const prefix = `${ASSET_FOLDER}/${name}/`;
+        const hidden = new Set((saved && saved.hidden) || []);
+        let names = files
+          .filter(f => f.startsWith(prefix) && !f.slice(prefix.length).includes("/"))
+          .map(f => f.slice(prefix.length))
+          .filter(n => EXTENSIONS.some(e => n.toLowerCase().endsWith(e)) && !hidden.has(n))
+          .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+        // order: as arranged in the editor (top to bottom, then left to right); new files at the end
+        if (saved && saved.desktop) {
+          const arranged = arrangedFiles(saved).filter(n => names.includes(n));
+          names = arranged.concat(names.filter(n => !arranged.includes(n)));
+        }
+        return names.map(n => encodePath(prefix + n));
+      }
+
+      // 2. No list at all (editor not saved yet): show the files arranged in the editor
+      if (!saved || !saved.desktop) return [];
+      return arrangedFiles(saved).map(f => encodePath(`${ASSET_FOLDER}/${name}/${f}`));
+    })();
+  }
+  return mediaCache[project.slug];
+}
+
+function placeholder(src) {
+  const p = document.createElement("div");
+  p.className = "placeholder";
+  p.textContent = decodeURIComponent(src);
+  return p;
+}
+
+// Video: muted, loops forever, no controls – like a GIF.
+// preload "auto" = starts by itself; "metadata" / "none" = waits until the page starts it
+function videoElement(src, alt, preload = "auto") {
+  const v = document.createElement("video");
+  v.src = src;
+  v.muted = true;
+  v.defaultMuted = true;
+  v.loop = true;
+  v.autoplay = preload === "auto";
+  v.playsInline = true;
+  v.preload = preload;
+  v.setAttribute("muted", "");
+  v.setAttribute("playsinline", "");
+  v.setAttribute("aria-label", alt);
+  v.addEventListener("loadeddata", () => {
+    const slide = v.closest(".slide");
+    // full view: only the current video plays, and only once it has arrived (not while turning)
+    if (slide && (!slide.classList.contains("current") || stripTurning)) return;
+    v.play().catch(() => { v.controls = true; });
+  });
+  v.addEventListener("error", () => v.replaceWith(placeholder(src)));
+  return v;
+}
+
+// Image or video, depending on the file extension.
+// eager: load the image right away (otherwise only when it comes near the screen)
+function mediaElement(src, alt, { eager = false, videoPreload } = {}) {
+  if (src.toLowerCase().endsWith(".mp4")) return videoElement(src, alt, videoPreload);
+  const img = document.createElement("img");
+  img.src = src;
+  img.alt = alt;
+  img.loading = eager ? "eager" : "lazy";
+  img.decoding = "async";                    // the browser unpacks the image on the side, without stalling the page
+  img.onerror = () => img.replaceWith(placeholder(src));
+  return img;
+}
+
+/* ---------- Left menu ---------- */
+projectList.innerHTML = projects.map(p =>
+  `<li><a href="#${p.slug}"><span class="blur">${p.title}</span></a><span class="year">${p.year}</span></li>`
+).join("");
+
+const sidebar = document.querySelector(".sidebar");
+
+// Touch: a tap switches the blur of the word on for a moment (.tap-blur), the CSS transition
+// fades it in and out. Mouse: the blur comes from hovering, see the style section.
+const TAP_BLUR = 700;                         // milliseconds until the blur is switched off again
+let tapTimer = null;
+function tapBlur(e) {
+  const el = e.target.closest(".sidebar a, .subtitle")?.querySelector(".blur");
+  if (!el) return;
+  sidebar.querySelectorAll(".tap-blur").forEach(other => other.classList.remove("tap-blur"));   // only one word at a time
+  el.classList.add("tap-blur");
+  clearTimeout(tapTimer);
+  tapTimer = setTimeout(() => el.classList.remove("tap-blur"), TAP_BLUR);
+}
+
+// Upright layout: the menu is fixed at the top, the content starts below it
+function updateHeaderHeight() {
+  document.documentElement.style.setProperty("--header-height", sidebar.offsetHeight + "px");
+}
+updateHeaderHeight();
+
+/* ---------- Upright layout: collapsible project list ----------
+   Two states: open ("archive −" + project list) and closed ("archive +").
+   - tap or click "archive": open / close
+   - start page: the list follows your finger (touch) or the wheel (mouse), and closes by itself after a while
+   - project pages: scrolling down closes an open list (it never opens by itself) */
+const MENU_AUTO_CLOSE = 5000;                 // start page: milliseconds until the open list closes by itself
+const subtitle = document.getElementById("subtitle");
+const signOpen = subtitle.querySelector(".sign-open");
+const signClosed = subtitle.querySelector(".sign-closed");
+const onSubpage = () => document.body.classList.contains("subpage");
+let menuState = 0;                            // 0 = open, 1 = closed (values in between while swiping)
+let autoClose = null, scrollStop = null, lastScrollY = 0;
+
+// height of the open project list, measured once (not on every finger movement)
+let listHeight = 1;
+function measureList() { listHeight = Math.max(projectList.scrollHeight, 1); }
+measureList();
+
+function applyMenu() {
+  if (!isUpright()) {                         // wide layout: always the normal menu
+    projectList.style.maxHeight = projectList.style.opacity = projectList.style.pointerEvents = subtitle.style.marginBottom = "";
+    signOpen.style.opacity = signClosed.style.opacity = "";
+    return;
+  }
+  const p = menuState;
+  projectList.style.maxHeight = (1 - p) * listHeight + "px";
+  projectList.style.opacity = 1 - p;
+  projectList.style.pointerEvents = p === 1 ? "none" : "";   // closed list: its empty edge doesn't cover "archive"
+  subtitle.style.marginBottom = 20 * (1 - p) + "px";
+  signOpen.style.opacity = Math.max(0, 1 - 2 * p);       // open: −
+  signClosed.style.opacity = Math.max(0, 2 * p - 1);     // closed: +
+  updateShadow();
+}
+
+// project pages: no shadow while the page is at the very top and the list is closed
+function updateShadow() {
+  sidebar.classList.toggle("flat", onSubpage() && window.scrollY <= 2 && menuState === 1);
+}
+
+function setMenu(state, animate) {
+  stopFollow();
+  menuState = Math.max(0, Math.min(1, state));
+  sidebar.classList.toggle("menu-anim", !!animate);
+  applyMenu();
+  clearTimeout(autoClose);
+  if (menuState === 0 && !onSubpage()) autoClose = setTimeout(() => setMenu(1, true), MENU_AUTO_CLOSE);
+}
+
+// moves the menu along with a swipe or scroll (dy > 0 closes it).
+// Movements are collected and applied once per screen frame, so the menu moves evenly.
+// ease = true (mouse wheel): a wheel notch is a big jump, so the menu glides there over a few frames.
+let menuPending = 0, menuEase = false, menuFrame = null;
+function menuFollow(dy, ease) {
+  if (!isUpright()) return;
+  clearTimeout(autoClose);
+  menuPending += dy;
+  menuEase = !!ease;
+  if (!menuFrame) menuFrame = requestAnimationFrame(menuTick);
+}
+function menuTick() {
+  menuFrame = null;
+  const take = menuEase && Math.abs(menuPending) > 1 ? menuPending * 0.3 : menuPending;   // 0.3 = glide speed for the wheel
+  menuPending -= take;
+  sidebar.classList.remove("menu-anim");
+  menuState = Math.max(0, Math.min(1, menuState + take / listHeight));
+  if (menuState === 0 || menuState === 1) menuPending = 0;   // already fully open / closed
+  applyMenu();
+  if (menuPending) menuFrame = requestAnimationFrame(menuTick);
+}
+function stopFollow() {
+  menuPending = 0;
+  cancelAnimationFrame(menuFrame);
+  menuFrame = null;
+}
+
+// start page, finger lifted: snap fully open or closed, depending on the last swipe direction
+function menuSettle(dir) {
+  if (!isUpright()) return;
+  stopFollow();
+  const target = dir > 0 ? (menuState > 0.2 ? 1 : 0) : dir < 0 ? (menuState < 0.8 ? 0 : 1) : Math.round(menuState);
+  setMenu(target, true);
+}
+
+subtitle.addEventListener("click", () => { if (isUpright()) setMenu(menuState > 0.5 ? 0 : 1, true); });
+
+sidebar.addEventListener("touchstart", e => {
+  tapBlur(e);
+  if (menuState === 0 && !onSubpage()) setMenu(0, false);   // touching the open list on the start page restarts the auto-close timer
+}, { passive: true });
+
+window.addEventListener("scroll", () => {
+  const dy = window.scrollY - lastScrollY;
+  lastScrollY = window.scrollY;
+  if (onSubpage() && menuState < 1 && dy > 0) {             // project page: scrolling down folds the list in
+    menuFollow(dy);
+    clearTimeout(scrollStop);
+    scrollStop = setTimeout(() => { if (menuState < 1) setMenu(1, true); }, 150);
+  }
+  updateShadow();
+}, { passive: true });
+
+/* ---------- Start page: floating images ---------- */
+let floatRun = 0;      // increases on every page change and stops old animation loops
+let layer = 1;
+
+function startPage() {
+  const run = ++floatRun;
+  const area = document.createElement("div");
+  area.className = "float-area";
+  content.replaceChildren(area);
+  document.title = "patrick walter — architecture";
+
+  const height = () => area.clientHeight || window.innerHeight;
+  const avgDuration = (FLOAT.durationMin + FLOAT.durationMax) / 2;
+  let items = [];       // images currently on screen
+  let push = 0;         // extra speed from scrolling (px/s)
+  let distance = 0;     // distance travelled since the last new image
+  let pool = [];        // all images/videos found across all projects
+  let deck = [];        // shuffled deck: an image returns only after all others had their turn
+
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function nextMedia() {
+    const onScreen = new Set(items.map(item => item.src));
+    if (!deck.length) deck = shuffle([...pool]);
+    let i = deck.findIndex(m => !onScreen.has(m.src));   // never the same image twice at once
+    if (i < 0) i = 0;
+    return deck.splice(i, 1)[0];
+  }
+
+  // Finds a horizontal position where the new image covers the others as little as possible
+  function bestPosition(widthPct, y, heightPx) {
+    const areaWidth = area.clientWidth;
+    const w = areaWidth * widthPct / 100;
+    let best = 0, bestScore = Infinity;
+    for (let k = 0; k < 16; k++) {
+      const left = Math.random() * (areaWidth - w);
+      let score = 0;
+      items.forEach(item => {
+        const itemLeft = areaWidth * item.left / 100, itemWidth = areaWidth * item.width / 100;
+        const overlapY = Math.min(y + heightPx, item.y + item.height()) - Math.max(y, item.y);
+        const overlapX = Math.min(left + w, itemLeft + itemWidth) - Math.max(left, itemLeft);
+        if (overlapX > 0 && overlapY > -heightPx * 0.5) score += overlapX * (overlapY + heightPx * 0.5);
+      });
+      if (score < bestScore) { bestScore = score; best = left; }
+    }
+    return best / areaWidth * 100;
+  }
+
+  function addImage(y) {
+    const { project, src } = nextMedia();
+    const a = document.createElement("a");
+    a.href = "#" + project.slug;
+    const widthPct = isUpright() ? random(FLOAT.widthMinMobile, FLOAT.widthMaxMobile) : random(FLOAT.widthMin, FLOAT.widthMax);
+    const duration = random(FLOAT.durationMin, FLOAT.durationMax);
+    const estimate = area.clientWidth * widthPct / 100 * 0.75;   // height before the image has loaded
+    if (y === "top") y = -estimate - random(20, 80);
+    const leftPct = bestPosition(widthPct, y, estimate);
+    a.style.width = widthPct + "%";
+    a.style.left = leftPct + "%";
+    a.style.zIndex = layer++;
+    const el = mediaElement(src, project.title, { eager: true });
+    a.appendChild(el);
+    const caption = document.createElement("span");
+    caption.className = "caption";
+    caption.textContent = project.title;
+    a.appendChild(caption);
+    area.appendChild(a);
+
+    const item = {
+      el: a, y, src,
+      left: leftPct, width: widthPct,    // position and width in % (remembered, so nothing has to be measured)
+      ratio: 0.75,                       // height / width, known once the image has loaded
+      height: () => area.clientWidth * item.width / 100 * item.ratio,
+      speed: height() / duration,        // own speed in px/s
+      factor: avgDuration / duration,    // faster images react more strongly -> sense of depth
+      paused: false,
+      dragging: false
+    };
+    // the real proportions, read once as soon as the image or video knows its size
+    const setRatio = () => {
+      const w = el.naturalWidth || el.videoWidth, h = el.naturalHeight || el.videoHeight;
+      if (w && h) item.ratio = h / w;
+    };
+    el.addEventListener("load", setRatio);
+    el.addEventListener("loadedmetadata", setRatio);
+    // mouse over an image: it stops (touch: no pause, a tap opens the project)
+    a.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") item.paused = true; });
+    a.addEventListener("pointerleave", () => item.paused = false);
+
+    // Dragging with the mouse button held down
+    let drag = null;          // start data of the current drag
+    let moved = false;        // actually moved? then don't trigger a click
+    a.addEventListener("pointerdown", e => {
+      if (e.button !== 0 || e.pointerType !== "mouse") return;   // dragging only with a mouse
+      e.preventDefault();
+      a.setPointerCapture(e.pointerId);
+      drag = { x: e.clientX, y: e.clientY, startY: item.y, startLeft: area.clientWidth * item.left / 100 };
+      moved = false;
+      item.dragging = true;
+      a.classList.add("dragging");
+      a.style.zIndex = layer++;             // grabbed image stays on top afterwards
+    });
+    a.addEventListener("pointermove", e => {
+      if (!drag) return;
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      if (Math.abs(dx) + Math.abs(dy) > 5) moved = true;
+      const areaWidth = area.clientWidth;
+      const left = Math.max(0, Math.min(areaWidth * (1 - item.width / 100), drag.startLeft + dx));
+      item.left = left / areaWidth * 100;
+      a.style.left = item.left + "%";
+      item.y = drag.startY + dy;
+      a.style.transform = `translateY(${item.y}px)`;
+    });
+    const release = () => {
+      if (!drag) return;
+      drag = null;
+      item.dragging = false;
+      a.classList.remove("dragging");
+    };
+    a.addEventListener("pointerup", release);
+    a.addEventListener("pointercancel", release);
+    a.addEventListener("click", e => { if (moved) e.preventDefault(); });
+    a.addEventListener("dragstart", e => e.preventDefault());
+
+    a.style.transform = `translateY(${y}px)`;
+    items.push(item);
+    return item;
+  }
+
+  // Scrolling over the images pushes them up or down
+  area.addEventListener("wheel", e => {
+    e.preventDefault();
+    const d = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? height() : 1);
+    push = Math.max(-4000, Math.min(4000, push + d * FLOAT.scrollStrength));
+    // upright layout: the project list folds in and out with the wheel, just like with a finger
+    if (isUpright() && d) {
+      menuFollow(d, true);
+      clearTimeout(wheelStop);
+      const dir = d;
+      wheelStop = setTimeout(() => menuSettle(dir), 150);
+    }
+  }, { passive: false });
+  let wheelStop = null;
+
+  // Touch: swiping over the images moves them like scrolling
+  let touchY = null, touchTime = 0;
+  area.addEventListener("touchstart", e => {
+    touchY = e.touches[0].clientY;
+    touchTime = performance.now();
+  }, { passive: true });
+  let lastSwipe = 0;
+  area.addEventListener("touchmove", e => {
+    if (touchY === null) return;
+    e.preventDefault();
+    const y = e.touches[0].clientY;
+    const now = performance.now();
+    const dt = Math.max((now - touchTime) / 1000, 0.008);
+    push = Math.max(-4000, Math.min(4000, (touchY - y) / dt));
+    menuFollow(touchY - y);                  // the project list folds in and out with the finger
+    if (touchY !== y) lastSwipe = touchY - y;
+    touchY = y;
+    touchTime = now;
+  }, { passive: false });
+  area.addEventListener("touchend", () => { touchY = null; menuSettle(lastSwipe); lastSwipe = 0; });
+
+  let last = performance.now();
+  function step(now) {
+    if (run !== floatRun) return;             // page changed -> stop this loop
+    const dt = Math.min((now - last) / 1000, 0.1);
+    last = now;
+    const h = height();
+    const baseSpeed = reducedMotion ? 0 : h / avgDuration;
+
+    items.forEach(item => {
+      if (item.dragging) return;              // being dragged -> don't move
+      const own = (item.paused || reducedMotion) ? 0 : item.speed;
+      item.y -= (own + push * item.factor) * dt;
+      item.el.style.transform = `translateY(${item.y}px)`;
+    });
+
+    // New images: from below when moving up – from above when scrolling back
+    distance += (baseSpeed + push) * dt;
+    const gapPx = (h / avgDuration) * (isUpright() ? FLOAT.gapMobile : FLOAT.gap);
+    // at most one new image per frame, also when scrolling fast (keeps the page smooth)
+    if (distance >= gapPx) { addImage(h + random(0, 60)); distance = Math.min(distance - gapPx, gapPx); }
+    else if (distance <= -gapPx) { addImage("top"); distance = Math.max(distance + gapPx, -gapPx); }
+
+    // Remove images that have left the area
+    items = items.filter(item => {
+      const gone = !item.dragging && (item.y + item.height() < -120 || item.y > h + 200);
+      if (gone) item.el.remove();
+      return !gone;
+    });
+
+    push *= Math.pow(1 - FLOAT.scrollGlide, dt * 2);
+    if (Math.abs(push) < 1) push = 0;
+    requestAnimationFrame(step);
+  }
+
+  // First find all files, then start
+  Promise.all(projects.map(project => media(project).then(list => list.map(src => ({ project, src })))))
+    .then(lists => {
+      if (run !== floatRun) return;
+      pool = lists.flat();
+      if (!pool.length) return;
+      // spread evenly over the height at the start
+      const count = isUpright() ? FLOAT.startCountMobile : FLOAT.startCount;
+      for (let i = 0; i < count; i++)
+        addImage((i + random(0.1, 0.6)) / count * height());
+      last = performance.now();
+      requestAnimationFrame(step);
+    });
+}
+
+/* ---------- Full view (lightbox) ---------- */
+const lightbox = document.createElement("div");
+lightbox.className = "lightbox";
+lightbox.innerHTML = `
+  <div class="lb-title"></div>
+  <button class="close" type="button">close</button>
+  <div class="stage"></div>
+  <div class="strip"></div>
+  <div class="counter"></div>`;
+document.body.appendChild(lightbox);
+const lbStage = lightbox.querySelector(".stage");
+const lbStrip = lightbox.querySelector(".strip");
+const lbCounter = lightbox.querySelector(".counter");
+const lbTitle = lightbox.querySelector(".lb-title");
+let lbList = [], lbIndex = 0, lbAlt = "";
+
+// Mouse (also in a narrow window): horizontal strip; touchscreens: one image at a time with swipe and pinch-zoom
+function openLightbox(list, index, title) {
+  lbList = list;
+  lbAlt = title;
+  lbTitle.textContent = title;
+  lightbox.classList.add("open");
+  document.body.classList.add("lightbox-open");
+  content.querySelectorAll("video").forEach(v => v.pause());   // videos on the page behind rest meanwhile
+  if (isTouch()) showInLightbox(index);       // touchscreens: swipe and pinch (also turned sideways)
+  else openStrip(index);
+}
+
+/* ---------- Mouse: one image at a time ----------
+   - each scroll movement (wheel or trackpad) turns exactly one image further or back
+   - click on an image: zoom in at that spot, moving the mouse looks around, click again: zoom out
+   - click on the white area around the image: close                                          */
+const CLICK_ZOOM = 2.5;      // magnification when clicking on an image
+let stripIndex = 0;
+
+// The images sit on a track that is moved sideways as a whole (smooth in every browser, also with videos)
+const lbTrack = document.createElement("div");
+lbTrack.className = "track";
+lbStrip.appendChild(lbTrack);
+
+let stripTurning = false, turnTimer = null;
+
+// Turning finished: hide the previous image, then start the video (Firefox draws
+// a black bar when a video starts while it is still sliding in)
+function finishTurn() {
+  if (!stripTurning) return;
+  stripTurning = false;
+  clearTimeout(turnTimer);
+  markCurrent(stripIndex, -1, true);
+}
+lbTrack.addEventListener("transitionend", e => {
+  if (e.target === lbTrack) finishTurn();
+});
+
+function openStrip(index) {
+  lightbox.classList.add("strip-mode");
+  stripIndex = index;
+  // one empty page per image; the images themselves are added only when needed (see fillAround)
+  lbTrack.replaceChildren(...lbList.map(() => {
+    const slide = document.createElement("div");
+    slide.className = "slide";
+    return slide;
+  }));
+  fillAround(index);
+  stripTurning = false;
+  markCurrent(index, -1, true);
+  moveTrack(index, false);
+  lbCounter.textContent = `${index + 1} / ${lbList.length}`;
+}
+
+// Loads only the current image and its two neighbours, so opening the full view doesn't fetch the whole project
+function fillAround(i) {
+  [i - 1, i, i + 1].forEach(k => {
+    const slide = lbTrack.children[k];
+    if (!slide || slide.firstChild) return;   // outside the list, or already loaded
+    const frame = document.createElement("div");
+    frame.className = "frame";
+    // videos start only when they are the current image
+    frame.appendChild(mediaElement(lbList[k], lbAlt, { eager: true, videoPreload: "metadata" }));
+    slide.appendChild(frame);
+  });
+}
+
+function moveTrack(i, animate) {
+  lbTrack.style.transition = animate ? "" : "none";
+  lbTrack.style.transform = `translateX(${-i * 100}%)`;
+}
+
+function unzoomAll() {
+  lbStrip.querySelectorAll(".frame.zoomed").forEach(f => {
+    f.classList.remove("zoomed");
+    f.firstElementChild.style.transform = "";
+  });
+}
+
+// The point under the mouse becomes the centre of the zoom
+function setZoomPoint(frame, e) {
+  const r = frame.getBoundingClientRect();
+  const x = Math.max(0, Math.min(100, (e.clientX - r.left) / r.width * 100));
+  const y = Math.max(0, Math.min(100, (e.clientY - r.top) / r.height * 100));
+  frame.firstElementChild.style.transformOrigin = `${x}% ${y}%`;
+}
+
+// Only the current image (and, while turning, the previous one) is shown;
+// only the current video plays. This avoids black boxes from videos in the background.
+function markCurrent(active, keep, play) {
+  [...lbTrack.children].forEach((slide, i) => {
+    const current = i === active;
+    slide.classList.toggle("current", current);
+    const shown = current || i === keep;
+    slide.style.visibility = shown ? "" : "hidden";
+    const v = slide.querySelector("video");
+    if (!v) return;
+    if (!current) { v.pause(); return; }
+    v.preload = "auto";                       // the current video already loads while it slides in
+    if (play) {
+      // let Firefox draw the video once more from scratch now that it stands still
+      v.style.display = "none";
+      void v.offsetWidth;
+      v.style.display = "";
+      v.play().catch(() => {});
+    }
+  });
+}
+
+// Turn to image i (stops at the first and last image)
+function goToSlide(i) {
+  i = Math.max(0, Math.min(lbList.length - 1, i));
+  if (i === stripIndex) return;
+  unzoomAll();
+  fillAround(i);
+  stripTurning = true;
+  markCurrent(i, stripIndex, false);         // video waits until it has arrived
+  stripIndex = i;
+  lbCounter.textContent = `${i + 1} / ${lbList.length}`;
+  moveTrack(i, true);
+  clearTimeout(turnTimer);
+  turnTimer = setTimeout(finishTurn, 800);   // safety net in case the browser skips the animation end
+}
+
+// One scroll movement = one image.
+// A trackpad keeps sending scroll signals for about a second after the fingers have left it
+// ("momentum"); they get weaker and weaker. Those are ignored after turning. A new swipe is
+// recognised at once because its signals get stronger again (or go the other way) –
+// so you don't have to wait until the momentum has died down.
+let wheelLock = false, lastWheel = 0, wheelSum = 0, lockDir = 0, lastAbs = 0, rising = 0, lastTurn = 0;
+lightbox.addEventListener("wheel", e => {
+  if (!lightbox.classList.contains("strip-mode")) return;
+  e.preventDefault();
+  const now = performance.now();
+  const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? lbStrip.clientWidth : 1;
+  const d = (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY) * unit;
+  const abs = Math.abs(d);
+  rising = abs > lastAbs + 1 ? rising + 1 : 0;   // how many signals in a row got stronger
+  lastAbs = abs;
+  const pause = now - lastWheel;
+  lastWheel = now;
+  if (wheelLock && (pause > 150                                   // the movement had stopped
+      || (now - lastTurn > 300 && (Math.sign(d) === -lockDir      // swiped the other way
+          || (rising >= 3 && abs > 8))))) {                       // new swipe while momentum was still running
+    wheelLock = false;
+    wheelSum = 0;
+  }
+  if (wheelLock) return;
+  wheelSum += d;
+  if (Math.abs(wheelSum) > 30) {
+    lockDir = Math.sign(wheelSum);
+    goToSlide(stripIndex + lockDir);
+    wheelLock = true;
+    wheelSum = 0;
+    rising = 0;
+    lastTurn = now;
+  }
+}, { passive: false });
+
+lightbox.addEventListener("click", e => {
+  if (!lightbox.classList.contains("strip-mode") || e.target.closest(".close")) return;
+  const frame = e.target.closest(".frame");
+  if (!frame) { closeLightbox(); return; }    // click on the white area: close
+  const el = frame.firstElementChild;
+  if (frame.classList.contains("zoomed")) {
+    frame.classList.remove("zoomed");
+    el.style.transform = "";
+  } else {
+    unzoomAll();
+    setZoomPoint(frame, e);
+    frame.classList.add("zoomed");
+    el.style.transform = `scale(${CLICK_ZOOM})`;
+  }
+});
+
+lightbox.addEventListener("mousemove", e => {
+  const zoomed = lbStrip.querySelector(".frame.zoomed");
+  if (zoomed) setZoomPoint(zoomed, e);       // move the mouse to look around in the zoomed image
+});
+
+function showInLightbox(index) {
+  resetZoom();
+  lbIndex = Math.max(0, Math.min(lbList.length - 1, index));   // stops at the first and last image
+  lbStage.replaceChildren(mediaElement(lbList[lbIndex], lbAlt, { eager: true }));
+  lbCounter.textContent = `${lbIndex + 1} / ${lbList.length}`;
+}
+
+function closeLightbox() {
+  const wasOpen = lightbox.classList.contains("open");
+  lightbox.classList.remove("open");
+  document.body.classList.remove("lightbox-open");
+  if (wasOpen) content.querySelectorAll("figure.visible video, .float-area video").forEach(v => v.play().catch(() => {}));   // page videos continue
+  lbStage.replaceChildren();
+  lbStage.classList.remove("snap");
+  lbStage.style.transform = "";
+  lbStage.style.opacity = "";
+  lightbox.classList.remove("strip-mode");
+  lbTrack.replaceChildren();
+}
+
+lightbox.querySelector(".close").addEventListener("click", closeLightbox);
+
+// Keyboard: arrow keys and Escape
+document.addEventListener("keydown", e => {
+  if (!lightbox.classList.contains("open")) return;
+  const strip = lightbox.classList.contains("strip-mode");
+  if (e.key === "ArrowRight") {
+    if (strip) goToSlide(stripIndex + 1);
+    else showInLightbox(lbIndex + 1);
+  }
+  if (e.key === "ArrowLeft") {
+    if (strip) goToSlide(stripIndex - 1);
+    else showInLightbox(lbIndex - 1);
+  }
+  if (e.key === "Escape") closeLightbox();
+});
+
+/* ---------- Touch: swipe, pinch-zoom, pan and double-tap like the Photos app ----------
+   - not zoomed: swipe left = next image, swipe right = previous image
+   - two fingers: zoom in and out (up to MAX_ZOOM)
+   - zoomed in: one finger moves the image around
+   - double tap: zoom in at that spot / back out                                    */
+const MAX_ZOOM = 5;          // maximum magnification
+const DOUBLE_TAP_ZOOM = 2.5; // magnification after a double tap
+let zoom = { s: 1, x: 0, y: 0 };
+let gesture = null;          // the gesture currently in progress
+let multiTouch = false;      // true from the moment two fingers touch until all are lifted
+let lastTap = null;
+
+const zoomEl = () => lbStage.firstElementChild;
+function resetZoom() { zoom = { s: 1, x: 0, y: 0 }; }
+function applyZoom(animate) {
+  const el = zoomEl();
+  if (!el) return;
+  el.classList.toggle("zoom-anim", !!animate);
+  el.style.transform = zoom.s === 1 && !zoom.x && !zoom.y ? "" : `translate(${zoom.x}px, ${zoom.y}px) scale(${zoom.s})`;
+}
+// Keeps the zoomed picture inside the screen (no panning into empty space)
+function clampZoom() {
+  const el = zoomEl();
+  if (!el) return;
+  const w = el.clientWidth, h = el.clientHeight;
+  const nw = el.naturalWidth || el.videoWidth || w, nh = el.naturalHeight || el.videoHeight || h;
+  const ratio = nw / nh;
+  const cw = Math.min(w, h * ratio), ch = Math.min(h, w / ratio);   // visible picture inside the box
+  const mx = Math.max(0, (cw * zoom.s - w) / 2), my = Math.max(0, (ch * zoom.s - h) / 2);
+  zoom.x = Math.max(-mx, Math.min(mx, zoom.x));
+  zoom.y = Math.max(-my, Math.min(my, zoom.y));
+}
+// Finger position relative to the centre of the image area
+function relative(x, y) {
+  const r = lbStage.getBoundingClientRect();
+  return { x: x - (r.left + r.width / 2), y: y - (r.top + r.height / 2) };
+}
+function handleTap(x, y) {
+  const now = performance.now();
+  if (lastTap && now - lastTap.t < 300 && Math.hypot(x - lastTap.x, y - lastTap.y) < 30) {
+    if (zoom.s > 1) resetZoom();
+    else {
+      const p = relative(x, y);
+      zoom = { s: DOUBLE_TAP_ZOOM, x: p.x * (1 - DOUBLE_TAP_ZOOM), y: p.y * (1 - DOUBLE_TAP_ZOOM) };
+      clampZoom();
+    }
+    applyZoom(true);
+    lastTap = null;
+  } else {
+    lastTap = { t: now, x, y };
+  }
+}
+
+lightbox.addEventListener("touchstart", e => {
+  if (lightbox.classList.contains("strip-mode")) { gesture = null; return; }   // strip (mouse) handles its own input
+  if (e.target.closest(".close")) { gesture = null; return; }   // let the close button work normally
+  lbStage.classList.remove("snap");
+  if (e.touches.length === 2) {
+    const [a, b] = e.touches;
+    multiTouch = true;
+    lbStage.style.transform = "";
+    gesture = {
+      type: "pinch",
+      d0: Math.hypot(b.clientX - a.clientX, b.clientY - a.clientY),
+      m0: relative((a.clientX + b.clientX) / 2, (a.clientY + b.clientY) / 2),
+      s0: zoom.s, x0: zoom.x, y0: zoom.y
+    };
+  } else if (e.touches.length === 1 && !multiTouch) {
+    const t = e.touches[0];
+    gesture = zoom.s > 1
+      ? { type: "pan", x: t.clientX, y: t.clientY, x0: zoom.x, y0: zoom.y, dx: 0, dy: 0 }
+      : { type: "swipe", x: t.clientX, y: t.clientY, t: performance.now(), dx: 0, dy: 0 };
+  }
+}, { passive: true });
+
+lightbox.addEventListener("touchmove", e => {
+  if (!gesture) return;
+  e.preventDefault();                         // keep the browser from scrolling the page
+  if (gesture.type === "pinch") {
+    if (e.touches.length < 2) return;
+    const [a, b] = e.touches;
+    const d = Math.hypot(b.clientX - a.clientX, b.clientY - a.clientY);
+    const m = relative((a.clientX + b.clientX) / 2, (a.clientY + b.clientY) / 2);
+    const s = Math.max(1, Math.min(MAX_ZOOM, gesture.s0 * d / gesture.d0));
+    // the spot between the fingers stays under the fingers
+    const cx = (gesture.m0.x - gesture.x0) / gesture.s0, cy = (gesture.m0.y - gesture.y0) / gesture.s0;
+    zoom = { s, x: m.x - cx * s, y: m.y - cy * s };
+    clampZoom();
+    applyZoom(false);
+    return;
+  }
+  const t = e.touches[0];
+  gesture.dx = t.clientX - gesture.x;
+  gesture.dy = t.clientY - gesture.y;
+  if (gesture.type === "pan") {
+    zoom.x = gesture.x0 + gesture.dx;
+    zoom.y = gesture.y0 + gesture.dy;
+    clampZoom();
+    applyZoom(false);
+  } else if (Math.abs(gesture.dx) > Math.abs(gesture.dy)) {
+    // the image follows the finger; at the first/last image it only gives way a little
+    const atEnd = (gesture.dx < 0 && lbIndex === lbList.length - 1) || (gesture.dx > 0 && lbIndex === 0);
+    lbStage.style.transform = `translateX(${atEnd ? gesture.dx * 0.25 : gesture.dx}px)`;
+  }
+}, { passive: false });
+
+function endTouch(e) {
+  if (e.touches.length === 0) multiTouch = false;
+  if (!gesture) return;
+  const g = gesture;
+  if (e.cancelable) e.preventDefault();       // no extra click after a gesture
+
+  if (g.type === "pinch") {
+    if (e.touches.length < 2) gesture = null;
+    if (zoom.s < 1.05) { resetZoom(); applyZoom(true); }
+    return;
+  }
+  gesture = null;
+  const isTap = e.type === "touchend" && Math.abs(g.dx) < 10 && Math.abs(g.dy) < 10;
+
+  if (g.type === "pan") {
+    if (isTap) handleTap(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+    return;
+  }
+
+  // swipe
+  const dx = g.dx;
+  const speed = Math.abs(dx) / Math.max(performance.now() - g.t, 1);   // px per ms
+  lbStage.classList.add("snap");
+  const dir = dx < 0 ? 1 : -1;
+  const hasNext = lbIndex + dir >= 0 && lbIndex + dir < lbList.length;   // no turning past the first/last image
+  if (e.type === "touchend" && hasNext && Math.abs(dx) > Math.abs(g.dy) && (Math.abs(dx) > 50 || (speed > 0.4 && Math.abs(dx) > 20))) {
+    const width = lightbox.clientWidth;
+    lbStage.style.transform = `translateX(${-dir * width}px)`;   // slide the old image out
+    lbStage.style.opacity = "0";
+    setTimeout(() => {
+      lbStage.classList.remove("snap");
+      showInLightbox(lbIndex + dir);
+      lbStage.style.transform = `translateX(${dir * width * 0.3}px)`;   // new image comes from the other side
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        lbStage.classList.add("snap");
+        lbStage.style.transform = "";
+        lbStage.style.opacity = "";
+      }));
+    }, 200);
+  } else {
+    lbStage.style.transform = "";             // not far enough: spring back
+    if (isTap) handleTap(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+  }
+}
+lightbox.addEventListener("touchend", endTouch);
+lightbox.addEventListener("touchcancel", endTouch);
+
+/* ---------- Project pages ---------- */
+
+// Aspect ratio (height / width) of an image or video, known as soon as the browser has read its size
+const ratioCache = {};
+function ratioOf(src) {
+  if (!ratioCache[src]) {
+    ratioCache[src] = new Promise(resolve => {
+      let done = false, poll;
+      const finish = ratio => {
+        if (done) return;
+        done = true;
+        clearInterval(poll);
+        resolve(ratio > 0 && isFinite(ratio) ? ratio : 2 / 3);
+      };
+      setTimeout(() => finish(2 / 3), 8000);
+      if (src.toLowerCase().endsWith(".mp4")) {
+        const v = document.createElement("video");
+        v.preload = "metadata";
+        v.muted = true;
+        v.onloadedmetadata = () => finish(v.videoHeight / v.videoWidth);
+        v.onerror = () => finish(2 / 3);
+        v.src = src;
+      } else {
+        const img = new Image();
+        const check = () => { if (img.naturalWidth) finish(img.naturalHeight / img.naturalWidth); };
+        img.onload = check;
+        img.onerror = () => finish(2 / 3);
+        img.src = src;
+        poll = setInterval(check, 40);       // the size is often known long before the image has fully loaded
+      }
+    });
+  }
+  return ratioCache[src];
+}
+
+let relayoutCollage = null;                  // re-arranges the current project page when the window size changes
+let observer = null;                         // lets the images appear while scrolling
+
+function projectPage(project) {
+  const header = document.createElement("div");
+  header.className = "project-header";
+  const meta = [project.year, project.place, project.context].filter(Boolean).join(", ");
+  header.innerHTML = `<h2>${project.title}</h2><div class="meta">${meta}</div>${project.text ? `<p>${project.text}</p>` : ""}`;
+
+  const collage = document.createElement("div");
+  collage.className = "collage";
+  content.replaceChildren(header, collage);
+  document.title = project.title + " — patrick walter";
+  relayoutCollage = null;
+
+  media(project).then(async list => {
+    if (location.hash.slice(1) !== project.slug) return;   // another page was opened meanwhile
+    // Aspect ratios: saved by the editor in layout.json, so no image has to be loaded in advance.
+    // Only files the editor has not seen yet are measured (that loads them once).
+    const data = await layoutData;
+    const known = (data && data.ratios) || {};
+    const folder = fileName(project.title);
+    const ratios = await Promise.all(list.map(src => known[`${folder}/${fileOf(src)}`] || ratioOf(src)));
+    const saved = await savedLayout(project);
+    if (location.hash.slice(1) !== project.slug) return;
+
+    const items = list.map((src, i) => {
+      const figure = document.createElement("figure");
+      figure.style.zIndex = i + 1;
+      figure.style.aspectRatio = 1 / ratios[i];      // reserves the space before the image has loaded
+      // images load only when they come near the screen, videos only when they become visible
+      figure.appendChild(mediaElement(src, project.title, { videoPreload: "none" }));
+      // click opens the full view
+      figure.addEventListener("click", () => openLightbox(list, i, project.title));
+      collage.appendChild(figure);
+      return { figure, file: fileOf(src), ratio: ratios[i] };
+    });
+    const ratio = new Map(items.map(it => [it.file, it.ratio]));
+
+    // Images not arranged yet: one below the other, alternating left and right (same as in the editor)
+    function stack(files, startY, startIndex) {
+      let y = startY;
+      const w = COLLAGE.newWidth;
+      return files.map((file, k) => {
+        const x = (startIndex + k) % 2 ? 100 - w - 4 : 4;
+        const e = { file, x: Math.max(0, x), y, w };
+        y += w * ratio.get(file) + 8;
+        return e;
+      });
+    }
+
+    // Places every image where it was put in the editor (positions in % of the width)
+    function layout() {
+      if (!collage.isConnected) return;
+      const W = collage.clientWidth;
+      // upright layout: its own arrangement from the editor if there is one, otherwise the wide one, scaled down
+      const arrangement = (saved && (isUpright() && saved.mobile || saved.desktop)) || [];
+      let entries = arrangement.filter(e => ratio.has(e.file));
+      // files that are not in the arrangement yet (e.g. new ones) go below it
+      const missing = items.map(it => it.file).filter(f => !entries.some(e => e.file === f));
+      const bottom = Math.max(0, ...entries.map(e => e.y + e.w * ratio.get(e.file)));
+      entries = entries.concat(stack(missing, entries.length ? bottom + 8 : 0, entries.length));
+
+      const pos = new Map(entries.map(e => [e.file, e]));
+      let end = 0;
+      items.forEach(it => {
+        const e = pos.get(it.file);
+        it.figure.style.setProperty("--x", e.x * W / 100 + "px");
+        it.figure.style.setProperty("--y", e.y * W / 100 + "px");
+        it.figure.style.setProperty("--w", e.w * W / 100 + "px");
+        end = Math.max(end, (e.y + e.w * it.ratio) * W / 100);
+      });
+      collage.style.height = end + "px";
+    }
+    layout();
+    relayoutCollage = layout;
+
+    // Appear while scrolling
+    if (observer) observer.disconnect();
+    observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          const v = entry.target.querySelector("video");
+          if (v) { v.preload = "auto"; v.play().catch(() => {}); }
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: "0px 0px -12% 0px" });
+    collage.querySelectorAll("figure").forEach(f => observer.observe(f));
+  });
+}
+
+/* ---------- Info and imprint ---------- */
+function textPage(html, title) {
+  const div = document.createElement("div");
+  div.className = "info";
+  div.innerHTML = html;
+  content.replaceChildren(div);
+  document.title = title + " — patrick walter";
+}
+
+/* ---------- Window size changes (also turning the phone) ---------- */
+let resizeTimer = null;
+function onResize() {
+  measureList();
+  updateHeaderHeight();
+  applyMenu();
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => relayoutCollage && relayoutCollage(), 150);
+}
+window.addEventListener("resize", onResize);
+document.fonts?.ready.then(onResize);         // the font changes the size of the menu
+
+/* ---------- Navigation ---------- */
+function route() {
+  floatRun++;
+  closeLightbox();
+  const slug = decodeURIComponent(location.hash.slice(1));
+  document.querySelectorAll(".sidebar a").forEach(a =>
+    a.classList.toggle("active", a.getAttribute("href") === "#" + slug && slug !== ""));
+  const project = projects.find(p => p.slug === slug);
+  if (project) projectPage(project);
+  else if (slug === "info") textPage(infoHTML, "info");
+  else if (slug === "imprint") textPage(imprintHTML, "imprint");
+  else startPage();
+  // upright layout: compact menu on every page except the start page
+  document.body.classList.toggle("subpage", slug !== "");
+  setMenu(slug !== "" ? 1 : 0, false);         // upright layout: list open on the start page, closed on other pages
+  updateHeaderHeight();
+  window.scrollTo(0, 0);
+  lastScrollY = 0;
+  updateShadow();                              // new page starts at the top
+}
+
+window.addEventListener("hashchange", route);
+route();
+</script>
+</body>
+</html>

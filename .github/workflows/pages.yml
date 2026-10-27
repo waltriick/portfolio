@@ -1,0 +1,41 @@
+# Publishes the website on every push to main.
+# Before publishing it writes assets.json: a list of all files in the assets folder,
+# so the website only has to load this one file instead of searching for every image.
+name: Publish website
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: List all files in the assets folder
+        run: |
+          python3 -c "import json, os; files = sorted(os.path.join(r, f).replace(os.sep, '/') for r, _, fs in os.walk('assets') for f in fs if not f.startswith('.')); print(json.dumps(files, indent=1))" > assets.json
+          echo "Files found: $(grep -c assets/ assets.json || true)"
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
