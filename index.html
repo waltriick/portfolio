@@ -23,314 +23,7 @@
   "sameAs": ["https://www.instagram.com/patrick.wa/"]
 }
 </script>
-<style>
-  :root {
-    --bg: #ffffff;
-    --text: #111111;
-    --muted: #8a8a8a;
-    --placeholder: #f1f0ee;
-    --sidebar: 300px;
-    --gap: 24px;
-    --blur: 3px;                             /* strength of the menu blur */
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { -webkit-text-size-adjust: 100%; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 14px;
-    line-height: 1.45;
-    text-transform: lowercase;
-  }
-  a { color: inherit; text-decoration: none; text-underline-offset: 3px; }
-
-  /* ---------- Menu blur ----------
-     Every word in the menu sits in <span class="blur">. It is blurred
-       mouse: while hovering (see "Mouse" at the end)  ·  touch: briefly after a tap (see "Touch")
-     The whole word is blurred with a filter; the bezier curve starts gently, speeds up and settles softly.
-     Safari cuts a blur off at the edge of its box once it has settled, so the box has 10px of extra
-     room all around (padding), which the negative margin takes back out of the layout.
-     pointer-events: none keeps that extra room from catching the mouse. */
-  .blur {
-    display: inline-block;
-    padding: 10px;
-    margin: -10px;
-    pointer-events: none;
-    filter: blur(0px);
-    transition: filter .6s cubic-bezier(0.25, 1, 0.4, 1);   /* .6s = how long the blur takes to come and go */
-  }
-  a.active .blur { text-decoration: underline; }   /* the page that is open right now; the underline blurs along */
-
-  /* ---------- Left column ---------- */
-  .sidebar {
-    position: fixed;
-    top: 0; left: 0; bottom: 0;
-    width: var(--sidebar);
-    padding: var(--gap);
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-  }
-  .name { font-size: 14px; font-weight: normal; margin-bottom: 2px; }
-  .subtitle { color: var(--muted); margin-bottom: 40px; }
-  .subtitle .toggle { display: none; }               /* + / − only in the upright layout */
-  .project-list { list-style: none; flex: 1; }
-  .project-list li { display: flex; justify-content: space-between; gap: 12px; }
-  .project-list .year { color: var(--muted); font-variant-numeric: tabular-nums; }
-  .footer-nav { margin-top: 40px; display: flex; flex-direction: column; }
-  .footer-nav a { width: fit-content; }
-
-  /* ---------- Right side ---------- */
-  main {
-    margin-left: var(--sidebar);
-    padding: var(--gap) var(--gap) var(--gap) 0;
-    min-height: 100vh;
-  }
-  .project-header { max-width: 640px; margin-bottom: 40px; }
-  .project-header h2 { font-size: 14px; font-weight: normal; }
-  .project-header .meta { color: var(--muted); margin-bottom: 16px; text-transform: none; }   /* shown exactly as written */
-  .project-header p { text-transform: none; }
-  .placeholder {
-    aspect-ratio: 3 / 2;
-    background: var(--placeholder);
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-transform: none;
-    font-size: 12px;
-  }
-
-  /* Project page: every image sits at the highest free spot, loosely offset (positions are computed by the script) */
-  .collage { position: relative; margin-bottom: 80px; }
-  .collage figure {
-    position: absolute;
-    left: var(--x);
-    top: var(--y);
-    width: var(--w);
-    cursor: pointer;                         /* click opens the full view */
-    user-select: none; -webkit-user-select: none;
-    /* images appear while scrolling */
-    opacity: 0;
-    translate: 0 60px;                       /* distance they glide up */
-    filter: blur(8px);                       /* starting blur */
-    transition: opacity 1.2s ease, translate 1.2s ease, filter 1.2s ease;   /* duration */
-  }
-  .collage figure.visible { opacity: 1; translate: 0 0; filter: blur(0); }
-  .collage figure:has(video),
-  .collage figure.visible:has(video) { filter: none; }   /* no blur on videos: it can cause black boxes */
-  @media (prefers-reduced-motion: reduce) {
-    .collage figure { translate: none; filter: none; transition: opacity .6s ease; }
-  }
-
-  .collage img, .collage video, .collage .placeholder { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .collage img, .collage video { pointer-events: none; -webkit-user-drag: none; }
-
-  /* Full view (lightbox) on project pages */
-  .lightbox {
-    position: fixed;
-    top: 0; right: 0; bottom: 0;
-    left: var(--sidebar);                    /* covers the whole right side */
-    background: var(--bg);
-    z-index: 20000;
-    display: none;
-    touch-action: none;                      /* touch: the page handles swipe and zoom itself */
-    overflow: hidden;
-  }
-  .lightbox.open { display: block; }
-  .lightbox .stage.snap { transition: transform .22s ease, opacity .22s ease; }   /* slide after a swipe */
-  .lightbox .stage .zoom-anim { transition: transform .25s ease; }                /* double-tap zoom */
-  .lightbox .stage {
-    position: absolute;
-    inset: 56px var(--gap) 56px 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .lightbox .stage img, .lightbox .stage video, .lightbox .stage .placeholder {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;                     /* as large as possible, never cropped */
-    display: block;
-    animation: lightbox-in .35s ease;
-  }
-  @keyframes lightbox-in { from { opacity: 0; } to { opacity: 1; } }
-  .lightbox .close, .lightbox .counter { position: absolute; z-index: 2; }
-  .lightbox .close {
-    top: var(--gap); right: var(--gap);
-    background: none; border: 0; font: inherit; color: inherit;
-    cursor: pointer; padding: 0;
-  }
-  .lightbox .counter { bottom: var(--gap); right: var(--gap); color: var(--muted); }
-  .lightbox .lb-title { position: absolute; z-index: 2; top: var(--gap); left: 0; }
-  body.lightbox-open { overflow: hidden; }
-
-  /* Mouse: full view, one image at a time; scrolling turns the page */
-  .lightbox .strip {
-    position: absolute;
-    inset: 56px 0;
-    overflow: hidden;
-  }
-  .lightbox .track {
-    display: flex;
-    height: 100%;
-    transition: transform .5s cubic-bezier(.2, .7, .2, 1);   /* speed of turning */
-    will-change: transform;
-  }
-  .lightbox:not(.strip-mode) .strip,
-  .lightbox.strip-mode .stage { display: none; }
-  .lightbox .strip .slide {                  /* one page per image, as wide as the visible area */
-    flex: 0 0 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .lightbox .strip .frame {
-    max-height: 100%;
-    overflow: hidden;                        /* zoom stays inside the image frame */
-    cursor: zoom-in;
-  }
-  .lightbox .strip .frame.zoomed { cursor: zoom-out; }
-  .lightbox .strip .frame img,
-  .lightbox .strip .frame video {
-    width: auto;
-    height: auto;
-    max-height: calc(100vh - 112px);         /* as tall as the space allows … */
-    max-width: calc(100vw - var(--sidebar) - 2 * var(--gap));   /* … and as wide */
-    display: block;
-    transition: transform .35s ease;         /* speed of the click zoom */
-    -webkit-user-drag: none;
-    user-select: none;
-  }
-  .lightbox .strip .frame .placeholder { height: calc(100vh - 112px); width: auto; }
-
-  /* Info page */
-  .info { max-width: 560px; text-transform: none; }
-  .info p { margin-bottom: 1em; }
-  .info h2 { font-size: 14px; font-weight: normal; text-transform: lowercase; margin: 2em 0 0.5em; }
-  /* CV: years on the left (grey), entry on the right */
-  .cv { list-style: none; }
-  .cv li { display: grid; grid-template-columns: 90px 1fr; gap: 12px; }
-  .cv .year { color: var(--muted); font-variant-numeric: tabular-nums; }
-  .info .contact { margin-top: 1em; }   /* same gap as between the lines on the imprint page */
-
-  /* ---------- Start page: floating images ---------- */
-  .float-area {
-    position: fixed;
-    top: 0; right: 0; bottom: 0;
-    left: var(--sidebar);
-    overflow: hidden;
-  }
-  .float-area a {
-    position: absolute;
-    top: 0;
-    will-change: transform;
-  }
-  .float-area img, .float-area video { -webkit-user-drag: none; pointer-events: none; }
-  .float-area img, .float-area video, .float-area .placeholder { width: 100%; height: auto; display: block; }
-  .float-area .caption {
-    position: absolute;
-    left: 0; bottom: -20px;
-    opacity: 0;
-    transition: opacity .2s;
-    white-space: nowrap;
-  }
-
-  /* =================== The four versions ===================
-     Input   mouse  = (hover: hover)   touch = (hover: none)        (same as isTouch in the script)
-     Layout  wide    = bar on the left: computers, and phones turned sideways
-             upright = menu at the top: the window is at most 760px wide AND at least 480px tall
-                       (same as UPRIGHT in the script). A phone turned sideways is too low for it.
-     So: mouse + wide, mouse + upright (narrow window), touch + upright (phone), touch + wide (phone sideways, tablet) */
-
-  /* ---------- Mouse ---------- */
-  @media (hover: hover) {
-    main a:hover, .lightbox .close:hover { text-decoration: underline; }   /* menu links: blur instead of underline */
-    .sidebar a:hover .blur { filter: blur(var(--blur)); }
-    /* start page: hovered image comes to the front with its caption; images can be dragged */
-    .float-area a { cursor: grab; user-select: none; -webkit-user-select: none; }
-    .float-area a:hover { z-index: 9999 !important; text-decoration: none; }
-    .float-area a:hover .caption { opacity: 1; }
-    .float-area a.dragging { cursor: grabbing; z-index: 10000 !important; }
-    /* upright layout (narrow window): "archive" blurs like the links */
-    @media (max-width: 760px) and (min-height: 480px) {
-      .subtitle:hover .blur { filter: blur(var(--blur)); }
-    }
-  }
-
-  /* ---------- Touch ----------
-     No hover effects at all: touchscreens keep the "hover" after a tap, so they would stay switched on. */
-  @media (hover: none) {
-    /* a tap blurs briefly: the script sets .tap-blur for a moment, the transition fades it in and out */
-    .blur.tap-blur { filter: blur(var(--blur)); }
-    .float-area { touch-action: none; }        /* start page: the page handles swiping itself */
-    /* phone turned sideways: the full view covers the whole display */
-    @media (max-height: 479px) {
-      .lightbox { left: 0; }
-      .lightbox .stage { inset: 40px 16px; }
-      .lightbox .close { top: 12px; right: 16px; }
-      .lightbox .counter { bottom: 12px; right: 16px; }
-      .lightbox .lb-title { top: 12px; left: 16px; }
-    }
-  }
-
-  /* ---------- Wide layout on low screens (phone turned sideways): narrower bar, smaller gaps ---------- */
-  @media (max-height: 479px) {
-    :root { --sidebar: 220px; }
-    .subtitle { margin-bottom: 20px; }
-    .footer-nav { margin-top: 20px; }
-  }
-
-  /* ---------- Upright layout ---------- */
-  @media (max-width: 760px) and (min-height: 480px) {
-    /* Menu stays fixed at the top, with a soft shadow below that moves along when the list opens or closes */
-    .sidebar {
-      right: 0; bottom: auto;
-      width: auto;
-      padding: 16px;
-      overflow: visible;
-      background: var(--bg);
-      z-index: 50;
-      box-shadow: 0 2px 14px rgba(0, 0, 0, 0.09);   /* last value = strength of the shadow */
-      transition: box-shadow .25s ease;
-    }
-    .sidebar.flat { box-shadow: none; transition: none; }   /* project page at the very top: shadow disappears at once (it only fades in) */
-    .subtitle { margin-bottom: 20px; }
-    /* info, instagram, imprint at the top right */
-    .footer-nav {
-      position: absolute;
-      top: 16px; right: 16px;
-      margin: 0;
-      flex-direction: row;
-      gap: 0 14px;
-    }
-    main {
-      position: relative;
-      z-index: 0;                            /* keeps dragged images below the menu */
-      margin-left: 0;
-      padding: calc(var(--header-height, 200px) + 24px) 16px 16px;
-    }
-    .float-area { left: 0; }
-    /* Full view covers the whole display */
-    .lightbox { left: 0; }
-    .lightbox .stage { inset: 56px 16px; }
-    .lightbox .strip .frame img,
-    .lightbox .strip .frame video { max-width: calc(100vw - 32px); }   /* mouse in a narrow window: full width */
-    .lightbox .close { top: 16px; right: 16px; }
-    .lightbox .counter { bottom: 16px; right: 16px; }
-    .lightbox .lb-title { top: 16px; left: 16px; }
-    /* Collapsible project list: the script sets height and opacity while you swipe */
-    /* clipped only top and bottom (for folding); 10px extra room so the blur of the first and last word isn't cut */
-    .project-list { overflow-x: visible; overflow-y: clip; padding-block: 10px; margin-block: -10px; }
-    .subtitle .toggle { display: inline-grid; margin-left: 0.35em; }   /* distance between "archive" and + / − */
-    .subtitle .toggle > span { grid-area: 1 / 1; text-align: center; }
-    .subtitle { cursor: pointer; width: fit-content; }
-    .sidebar.menu-anim .project-list,
-    .sidebar.menu-anim .subtitle,
-    .sidebar.menu-anim .subtitle .toggle > span { transition: max-height .3s ease, opacity .3s ease, margin .3s ease; }
-  }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -382,7 +75,7 @@ const projects = [
     year: "2025/26",
     place: "Munich",
     context: "3rd year master project at TUM, Prof. Uta Graff<br>with Hendrik Schmiemann",
-    text: "A House of metal crafts is to be built on the site of a former railway works. It will offer space for artists and craftspeople as well as exhibition rooms. The site is an island within an extensive track bed, and visitors can reach it only through an underpass.<br><br>The design is meant to act as an architectural interface between craft, building and visitor.<br><br>It follows the logic of this unusual site and makes the underground arrival its central theme. The existing building is kept and upgraded. It mediates between two new buildings: a workshop to the west and an exhibition house to the east. Both are reached through newly created, sheltering trenches.<br><br>Conceptually, the architecture also makes space through subtraction and addition. Newly built functional cores, and thick walls open up served spaces for working and making while housing the buildings servant spaces."
+    text: "A House of Metal Crafts is to be built on the site of a former railway works. It will offer space for artists and craftspeople as well as exhibition rooms. The site is an island within an extensive track bed, and visitors can reach it only through an underpass.<br><br>The design is meant to act as an architectural interface between craft, building and visitor.<br><br>It follows the logic of this unusual site and makes the underground arrival its central theme. The existing building is kept and upgraded. It mediates between two new buildings: a workshop to the west and an exhibition house to the east. Both are reached through newly created, sheltering trenches.<br><br>Conceptually, the architecture also makes space through subtraction and addition. Newly built functional cores, and thick walls open up served spaces for working and making while housing the buildings servant spaces."
   },
   {
     slug: "lamina",
@@ -398,7 +91,7 @@ const projects = [
     year: "2024",
     place: "Cyprus",
     context: "1st year master project at TUM, Prof. Francis Kéré<br>with Hanna Panschar & Bertram Dietz",
-    text: "Salt [a]way is an alternative to conventional desalination plants, which use large amounts of energy mostly generated from fossil fuels. Cyprus serves as the site for our case-study since it is the island with the highest dependence on sea water desalination in Europe. Our plant runs on solar heat alone and produces clean drinking water. We also looked at how to use brine, the waste product of desalination. In our design, it becomes the building material for salt panels used on the façade. Besides their distinctive look, the panels improve the indoor climate, are highly fire-resistant and have good acoustic properties.<br>Inside the circular breakwater, seawater evaporates under direct sunlight in floating modules. The distilled water is collected and enriched with minerals in a treatment plant so it can be used as drinking water. In our case study, the system is designed to cover the entire freshwater demand of a neighbouring hotel.<br>Thermal desalination produces highly concentrated brine. Conventional plants pump it back into the sea, where it upsets the balance of the ecosystem. In our design, the brine is pumped from the floating modules into knee-deep pools on land. Stainless steel frames are placed in these pools, and after 15 days in direct sunlight, salt crystals have formed on them. The frames are then swapped for new ones, and the crystal-covered frames are worked into custom-fitted panels in a workshop.<br>The panels then dry for three months in a continuous system that runs in a full circle along a walkway. Built on top of the breakwater, the walkway is used for drying the panels and also extends the beach promenade for tourists and visitors."
+    text: ""
   },
   {
     slug: "cool-lab",
@@ -487,7 +180,7 @@ const projectList = document.getElementById("project-list");
 const content = document.getElementById("content");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const random = (min, max) => min + Math.random() * (max - min);
-// The four versions (same values as at the end of the style section):
+// The four versions (same values as at the end of style.css):
 // layout upright (menu at the top) or wide (bar on the left) × input touch or mouse
 const UPRIGHT = "(max-width: 760px) and (min-height: 480px)";
 const isUpright = () => window.matchMedia(UPRIGHT).matches;
@@ -606,7 +299,7 @@ projectList.innerHTML = projects.map(p =>
 const sidebar = document.querySelector(".sidebar");
 
 // Touch: a tap switches the blur of the word on for a moment (.tap-blur), the CSS transition
-// fades it in and out. Mouse: the blur comes from hovering, see the style section.
+// fades it in and out. Mouse: the blur comes from hovering, see style.css.
 const TAP_BLUR = 700;                         // milliseconds until the blur is switched off again
 let tapTimer = null;
 function tapBlur(e) {
