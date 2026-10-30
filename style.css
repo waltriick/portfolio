@@ -27,7 +27,7 @@ body {
 a { color: inherit; text-decoration: none; text-underline-offset: 3px; }
 
 /* ---------- Menu blur ----------
-   Every word in the menu sits in <span class="blur">. It is blurred
+   Every word in the menu (and every text button, e.g. "create pdf") sits in <span class="blur">. It is blurred
      mouse: while hovering (see "Mouse" at the end)  ·  touch: briefly after a tap (see "Touch")
    The whole word is blurred with a filter; the bezier curve starts gently, speeds up and settles softly.
    Safari cuts a blur off at the edge of its box once it has settled, so the box has 10px of extra
@@ -38,7 +38,7 @@ a { color: inherit; text-decoration: none; text-underline-offset: 3px; }
   padding: 10px;
   margin: -10px;
   pointer-events: none;
-  filter: blur(0px);
+  filter: none;                            /* no filter at rest: Safari would otherwise redraw the menu while scrolling */
   transition: filter .6s cubic-bezier(0.25, 1, 0.4, 1);   /* .6s = how long the blur takes to come and go */
 }
 a.active .blur { text-decoration: underline; }   /* the page that is open right now; the underline blurs along */
@@ -98,7 +98,7 @@ main {
   filter: blur(8px);                       /* starting blur */
   transition: opacity 1.2s ease, translate 1.2s ease, filter 1.2s ease;   /* duration */
 }
-.collage figure.visible { opacity: 1; translate: 0 0; filter: blur(0); }
+.collage figure.visible { opacity: 1; translate: 0 0; filter: none; }   /* none, not blur(0): keeps scrolling light in Safari */
 .collage figure:has(video),
 .collage figure.visible:has(video) { filter: none; }   /* no blur on videos: it can cause black boxes */
 @media (prefers-reduced-motion: reduce) {
@@ -196,6 +196,15 @@ body.lightbox-open { overflow: hidden; }
 .cv .year { color: var(--muted); font-variant-numeric: tabular-nums; }
 .info .contact { margin-top: 1em; }   /* same gap as between the lines on the imprint page */
 
+/* ---------- Portfolio page (portfolio.html): the projects in the menu are chosen by clicking (underlined = included) ---------- */
+.text-button {                             /* buttons that look like the links of the website */
+  background: none; border: 0; padding: 0;
+  font: inherit; color: inherit; text-transform: lowercase;
+  cursor: pointer;
+}
+.text-button:disabled { color: var(--muted); cursor: default; }
+.muted { color: var(--muted); }
+
 /* ---------- Start page: floating images ---------- */
 .float-area {
   position: fixed;
@@ -227,8 +236,9 @@ body.lightbox-open { overflow: hidden; }
 
 /* ---------- Mouse ---------- */
 @media (hover: hover) {
-  main a:hover, .lightbox .close:hover { text-decoration: underline; }   /* menu links: blur instead of underline */
-  .sidebar a:hover .blur { filter: blur(var(--blur)); }
+  main a:hover, .lightbox .close:hover { text-decoration: underline; }   /* menu links and text buttons: blur instead of underline */
+  .sidebar a:hover .blur,
+  .text-button:hover:not(:disabled) .blur { filter: blur(var(--blur)); }
   /* start page: hovered image comes to the front with its caption; images can be dragged */
   .float-area a { cursor: grab; user-select: none; -webkit-user-select: none; }
   .float-area a:hover { z-index: 9999 !important; text-decoration: none; }

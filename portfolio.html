@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>into pdf — patrick walter</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="favicon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<aside class="sidebar">
+  <h1 class="name"><a href="index.html"><span class="blur">patrick walter</span></a></h1>
+  <div class="subtitle"><a href="index.html"><span class="blur">archive</span></a></div>
+  <ul class="project-list" id="project-list"></ul>
+  <nav class="footer-nav">
+    <a href="index.html#info"><span class="blur">info</span></a>
+    <a href="portfolio.html" class="active"><span class="blur">into pdf</span></a>
+    <a href="index.html#imprint"><span class="blur">imprint</span></a>
+  </nav>
+</aside>
+
+<main id="content">
+  <div class="info">
+    <h2>create a pdf from the archive</h2>
+    <p>Select a project in the list to add it to the PDF or to remove it again.<br>Underlined projects are included.</p>
+    <p>
+      <button type="button" class="text-button" id="make" disabled><span class="blur">create pdf</span></button>
+      <span class="muted" id="count"></span>
+    </p>
+  </div>
+</main>
+
+<!-- Opened locally: layout.js (written by the gallery editor) contains the list of all files -->
+<!-- also on a test server on your own computer (localhost), where there is no assets.json -->
+<script>if (location.protocol === "file:" || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) document.write('<script src="layout.js"><\/script>');</script>
+
+<!-- shared by all pages: projects.js = your projects and texts · media.js = finds the images · site.js = behaviour
+     pdf-layout.js = image spots in the PDF (shared with the editor) · pdf.js = builds the PDF -->
+<script src="projects.js"></script>
+<script src="media.js"></script>
+<script src="site.js"></script>
+<script src="pdf-layout.js"></script>
+<script src="pdf.js"></script>
+<script>
+/* =========================================================
+   PDF PORTFOLIO — step 1: choosing the projects
+   The menu shows the projects exactly as on the website (from projects.js).
+   Clicking a project adds it to the PDF or removes it: underlined = included.
+   The choice is remembered in this browser for the next visit.
+   ========================================================= */
+const list = document.getElementById("project-list");
+const STORE = "portfolio-selection";
+
+// remembered choice (list of slugs); without one, all projects are included
+let chosen = null;
+try { chosen = JSON.parse(localStorage.getItem(STORE)); } catch (e) { /* not available, e.g. private window */ }
+if (!Array.isArray(chosen)) chosen = projects.map(p => p.slug);
+
+list.innerHTML = projects.map(p =>
+  `<li><a href="#" data-slug="${p.slug}" role="button"><span class="blur">${p.title}</span></a><span class="year">${p.year}</span></li>`
+).join("");
+updateHeaderHeight();                         // upright layout: the menu got taller (site.js)
+const links = [...list.querySelectorAll("a")];
+const selected = () => links.filter(a => a.classList.contains("active")).map(a => a.dataset.slug);
+links.forEach(a => a.classList.toggle("active", chosen.includes(a.dataset.slug)));
+
+function update() {
+  const n = selected().length;
+  document.getElementById("count").textContent = n === 1 ? "1 project" : n + " projects";
+  document.getElementById("make").disabled = n === 0;
+  try { localStorage.setItem(STORE, JSON.stringify(selected())); } catch (e) { /* not available */ }
+}
+list.addEventListener("click", e => {
+  const a = e.target.closest("a");
+  if (!a) return;
+  e.preventDefault();
+  a.classList.toggle("active");
+  update();
+});
+update();
+
+// build the PDF from the chosen projects (in the order of the list), see pdf.js
+const make = document.getElementById("make");
+make.addEventListener("click", async () => {
+  const count = document.getElementById("count");
+  const chosenProjects = projects.filter(p => selected().includes(p.slug));
+  make.disabled = true;
+  try {
+    await makePortfolio(chosenProjects, text => count.textContent = text);
+  } catch (e) {
+    count.textContent = "the pdf could not be created: " + e.message;
+  }
+  make.disabled = false;
+});
+</script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 # Publishes the website on every push to main.
 # Before publishing it writes assets.json: a list of all files in the assets folder,
 # so the website only has to load this one file instead of searching for every image.
+# It also makes smaller copies of the images for the start page on phones (folder "small").
 name: Publish website
 
 on:
@@ -30,6 +31,49 @@ jobs:
         run: |
           python3 -c "import json, os; files = sorted(os.path.join(r, f).replace(os.sep, '/') for r, _, fs in os.walk('assets') for f in fs if not f.startswith('.')); print(json.dumps(files, indent=1))" > assets.json
           echo "Files found: $(grep -c assets/ assets.json || true)"
+
+      # Smaller copies (at most 1200 px wide) for the start page on phones, in the folder "small".
+      # They exist only on the published site: your originals in the repository stay untouched.
+      # Images that are small enough anyway are copied unchanged; the others are scaled down
+      # with high quality (JPEG quality 92, colour profile kept, turned upright like in the browser).
+      - name: Smaller copies for the start page
+        run: |
+          pip install --quiet pillow
+          python3 - <<'PY'
+          import os, shutil
+          from PIL import Image, ImageOps
+          MAX = 1200
+          count = 0
+          for root, _, files in os.walk("assets"):
+              for f in files:
+                  ext = f.lower().rsplit(".", 1)[-1]
+                  if f.startswith(".") or ext not in ("jpg", "jpeg", "png", "webp"):
+                      continue
+                  src = os.path.join(root, f)
+                  dst = os.path.join("small", src)
+                  os.makedirs(os.path.dirname(dst), exist_ok=True)
+                  try:
+                      im = Image.open(src)
+                      icc = im.info.get("icc_profile")
+                      if im.width <= MAX and im.height <= MAX * 2:
+                          shutil.copyfile(src, dst)
+                          continue
+                      im = ImageOps.exif_transpose(im)
+                      w = min(MAX, im.width)
+                      im = im.resize((w, round(im.height * w / im.width)), Image.LANCZOS)
+                      if ext in ("jpg", "jpeg"):
+                          if im.mode not in ("RGB", "L", "CMYK"):
+                              im = im.convert("RGB")
+                          im.save(dst, quality=92, optimize=True, progressive=True, icc_profile=icc)
+                      elif ext == "webp":
+                          im.save(dst, quality=92, icc_profile=icc)
+                      else:
+                          im.save(dst, optimize=True, icc_profile=icc)
+                      count += 1
+                  except Exception as e:
+                      print("skipped", src, e)  # the start page then simply uses the original
+          print("scaled down:", count)
+          PY
 
       - uses: actions/configure-pages@v5
 

@@ -33,7 +33,7 @@
   <ul class="project-list" id="project-list"></ul>
   <nav class="footer-nav">
     <a href="#info"><span class="blur">info</span></a>
-    <a href="https://www.instagram.com/patrick.wa/" target="_blank" rel="noopener"><span class="blur">instagram</span></a>
+    <a href="portfolio.html"><span class="blur">into pdf</span></a>
     <a href="#imprint"><span class="blur">imprint</span></a>
   </nav>
 </aside>
@@ -42,115 +42,15 @@
 
 <!-- Opened locally (double-click): layout.js, written by the gallery editor, contains the
      arrangement and the list of all files, because browsers don't let local pages load layout.json -->
-<script>if (location.protocol === "file:") document.write('<script src="layout.js"><\/script>');</script>
+<!-- also on a test server on your own computer (localhost), where there is no assets.json -->
+<script>if (location.protocol === "file:" || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) document.write('<script src="layout.js"><\/script>');</script>
+
+<!-- shared by all pages: projects.js = your projects and texts · media.js = finds the images · site.js = behaviour -->
+<script src="projects.js"></script>
+<script src="media.js"></script>
+<script src="site.js"></script>
 
 <script>
-/* =========================================================
-   PROJECTS — this is where you maintain your content.
-   New project: copy a block and change the values.
-
-   Every project gets a subfolder inside  assets/ , named after the
-   project title (spaces become _ , special characters like [ ] are
-   dropped: "salt [a]way" -> assets/salt_away/ ). The image and video
-   files inside can have any name (.jpg, .png, .webp, .mp4).
-   Videos play muted in an endless loop.
-
-   GALLERY EDITOR: open editor.html (in Chrome or Edge) to arrange and size
-   the images of each project. It saves layout.json, which this page reads.
-   Images that are not arranged yet appear one below the other,
-   exactly as the editor shows them before you arrange them.
-   ========================================================= */
-const projects = [
-  {
-    slug: "alors-on-danse",
-    title: "alors on danse",
-    year: "2026",
-    place: "Brussels",
-    context: "thesis project at TUM, Prof. Stephen Bates",
-    text: "What if the thing keeping you awake at night was the thing keeping your home warm?<br><br>Clubs are often seen as a problem for residential life: too loud, too late, too disruptive. This proposal turns that relationship around. It converts a European office building in Brussels into housing with alternative forms of living and puts a club in the underground parking garage below.<br>The building becomes a living labyrinth where residents, commuters from the Maelbeek metro station and clubgoers share paths and thresholds at different times of day and night. The apartments are organised around a compact core, and the old office partitions are reused as dividing walls. Curtains and seasonal buffer zones let residents adapt their homes throughout the year.<br>For the club, part of the slab between two garage levels is removed, and the concrete gained is reused to build the club's walls. Heat from the dance floor is stored in a thermal buffer tank behind the DJ booth and heats the apartments after closing time.<br>Nothing is simply demolished.<br><br>Dancing becomes heat. Heat becomes dwelling. And what was once perceived as unpleasant and disruptive becomes the motor of the home."
-  },
-  {
-    slug: "house-of-metal",
-    title: "house of metal",
-    year: "2025/26",
-    place: "Munich",
-    context: "3rd year master project at TUM, Prof. Uta Graff<br>with Hendrik Schmiemann",
-    text: "A House of Metal Crafts is to be built on the site of a former railway works. It will offer space for artists and craftspeople as well as exhibition rooms. The site is an island within an extensive track bed, and visitors can reach it only through an underpass.<br><br>The design is meant to act as an architectural interface between craft, building and visitor.<br><br>It follows the logic of this unusual site and makes the underground arrival its central theme. The existing building is kept and upgraded. It mediates between two new buildings: a workshop to the west and an exhibition house to the east. Both are reached through newly created, sheltering trenches.<br><br>Conceptually, the architecture also makes space through subtraction and addition. Newly built functional cores, and thick walls open up served spaces for working and making while housing the buildings servant spaces."
-  },
-  {
-    slug: "lamina",
-    title: "lamina",
-    year: "2025/26",
-    place: "Door handle, cast bronze",
-    context: "3rd year master seminar at TUM, Prof. Uta Graff<br>with Hendrik Schmiemann",
-    text: "Lamina is a cast bronze door handle, made in collaboration with local craft businesses.<br>Production began with laser-cut cardboard layers, glued one on top of the other. Wax sprues were attached to the cardboard model, which was then invested in fireclay. Over several days in the kiln, the cardboard and wax burned out completely.<br>Molten bronze was poured through the channels the wax had left behind. Once it had cooled, the casting was freed from its sprues. Finally, the handle was sandblasted and patinated with liver of sulphur.<br>Its surface still shows every layer of the original model."
-  },
-  {
-    slug: "salt-away",
-    title: "salt [a]way",
-    year: "2024",
-    place: "Cyprus",
-    context: "1st year master project at TUM, Prof. Francis Kéré<br>with Hanna Panschar & Bertram Dietz",
-    text: ""
-  },
-  {
-    slug: "cool-lab",
-    title: "cool lab",
-    year: "2024",
-    place: "TUM Campus",
-    context: "1st year master seminar at TUM, Prof. Francis Kéré, Inês Dantas<br>team of 12 students",
-    text: "The task was to design a pavilion with a cooling effect, develop it in detail and build it on the TUM campus for one day. Twelve students had eight weeks, from April to June 2024, supervised by Inês Dantas. Along with the design, we raised all the funding ourselves and ran simulations to prove the cooling effect.<br><br>The pavilion offered a generous seating area and combined several cooling methods for hot summer days. Textile sunshades blocked direct sunlight. A tubing system sprayed a fine mist of water along the top edge of the fabric to keep it wet. The people sitting on the platform generated the pressure themselves, with a bike pump built into the seating and a small pressure tank."
-  },
-  {
-    slug: "la-rotante",
-    title: "la rotante",
-    year: "2023/24",
-    place: "",
-    context: "1st year master seminar at TUM, integrated product design<br>with Mia Schury & Clelia Veith",
-    text: "An honest, simple, and durable design. Crafted from a single sheet of raw aluminium, La Rotante reveals its materiality and manufacturing process at first glance.Its minimalist form streamlines production in just a few steps, starting with precision-cut aluminum by a water jet, followed by folding and hand assembly using a hammer and pins, all without welding joints. With a cut-out circle serving as a versatile lampshade, simply rotate it to create direct or indirect light according to your needs."
-  },
-];
-
-/* Texts for the info and imprint pages */
-const infoHTML = `
-  <h2>Architecture means...</h2>
-  <p>much more than designing a beautiful building. It means responsibility, because it surrounds us every day. It plays a vital role in creating and restoring social relationships.<br>I am particularly interested in building within the existing fabric, which I believe is one of the most important tasks of our time. It means rethinking what is already there and finding new and different ways to use it, weaving together materials and uses and giving them new meaning.</p>
-  <h2>education</h2>
-  <ul class="cv">
-    <li><span class="year">2023–2026</span><span>M.A. Architecture, Technical University of Munich</span></li>
-    <li><span class="year">2024–2025</span><span>M.A. Architecture, Universidade de Lisboa</span></li>
-    <li><span class="year">2019–2022</span><span>B.Sc. Architecture and Urban Planning, University of Stuttgart</span></li>
-    <li><span class="year">2017–2019</span><span>B.Sc. Civil Engineering, University of Stuttgart</span></li>
-    <li><span class="year">2009–2017</span><span>Abitur, Remstal-Gymnasium, Weinstadt</span></li>
-  </ul>
-
-  <h2>experience</h2>
-  <ul class="cv">
-    <li><span class="year">2025–2026</span><span>Student assistant, Design Factory, Technical University of Munich</span></li>
-    <li><span class="year">2022–2023</span><span>Internship, Delugan Meissl Associated Architects, Vienna</span></li>
-    <li><span class="year">2021–2022</span><span>Tutor in structural design, ITKE, University of Stuttgart</span></li>
-    <li><span class="year">2019</span><span>Internship, W67 Architekten, Stuttgart</span></li>
-    <li><span class="year">2018–2025</span><span>Internship, semester-break job, Carpentry Wiegmann GmbH, Kernen</span></li>
-    <li><span class="year">2016–2022</span><span>IT assistant, AVL IT GmbH, Weinstadt</span></li>
-    <li><span class="year">2014</span><span>Internship, blocher partners, Stuttgart</span></li>
-  </ul>
-
-  <h2>exhibitions</h2>
-  <ul class="cv">
-    <li><span class="year">2025</span><span>Water Futures, Pavillon 333, Technical University of Munich</span></li>
-    <li><span class="year">2025</span><span>Water Futures, ZAZ Bellerive – Architecture Center Zurich</span></li>
-  </ul>
-
-  <p class="contact">contact: <a href="mailto:mail@patrickarchive.com">mail@patrickarchive.com</a></p>
-`;
-const imprintHTML = `
-  <h2>imprint (impressum)</h2>
-  <p>Information according to § 5 DDG<br>
-  Patrick Walter<br>
-  Germany</p>
-  <p class="contact">contact: <a href="mailto:mail@patrickarchive.com">mail@patrickarchive.com</a></p>
-`;
-
 /* Settings for the floating images on the start page */
 const FLOAT = {
   gap: 6,            // roughly every how many seconds a new image appears
@@ -173,9 +73,6 @@ const COLLAGE = {
 };
 
 /* ================= no need to change anything below ================= */
-const ASSET_FOLDER = "assets";
-const EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp", ".gif", ".mp4"];
-
 const projectList = document.getElementById("project-list");
 const content = document.getElementById("content");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -185,67 +82,6 @@ const random = (min, max) => min + Math.random() * (max - min);
 const UPRIGHT = "(max-width: 760px) and (min-height: 480px)";
 const isUpright = () => window.matchMedia(UPRIGHT).matches;
 const isTouch = () => window.matchMedia("(hover: none)").matches;
-
-// File name from the title: spaces -> _, special characters like [ ] are dropped
-function fileName(title) {
-  return title.trim().replace(/\s+/g, "_").replace(/[^\p{L}\p{N}_-]/gu, "");
-}
-
-// List of all files, written automatically by GitHub on every push (assets.json).
-// Online the site reads only this one file instead of searching for every image.
-// Locally (or if it is missing) the list from layout.js is used instead.
-function loadJSON(file, local) {
-  const fallback = () => local() || null;
-  return location.protocol.startsWith("http")
-    ? fetch(file, { cache: "no-cache" }).then(r => r.ok ? r.json() : fallback()).catch(fallback)
-    : Promise.resolve(fallback());
-}
-const manifest = loadJSON("assets.json", () => window.LOCAL_ASSETS);
-// Arrangement made with the gallery editor (editor.html)
-const layoutData = loadJSON("layout.json", () => window.LOCAL_LAYOUT);
-
-const encodePath = path => path.split("/").map(encodeURIComponent).join("/");
-async function savedLayout(project) {
-  const data = await layoutData;
-  return (data && data.projects && data.projects[fileName(project.title)]) || null;
-}
-const fileOf = src => decodeURIComponent(src.split("/").pop());
-// files in the order arranged in the editor: top to bottom, then left to right
-const arrangedFiles = saved => saved.desktop.slice().sort((a, b) => a.y - b.y || a.x - b.x).map(e => e.file);
-
-// Finds all files of a project; the result is cached
-const mediaCache = {};
-function media(project) {
-  if (!mediaCache[project.slug]) {
-    mediaCache[project.slug] = (async () => {
-      const name = fileName(project.title);
-      const files = await manifest;
-      const saved = await savedLayout(project);
-
-      // 1. Online: every image or video in the project folder counts, whatever its name
-      if (files) {
-        const prefix = `${ASSET_FOLDER}/${name}/`;
-        const hidden = new Set((saved && saved.hidden) || []);
-        let names = files
-          .filter(f => f.startsWith(prefix) && !f.slice(prefix.length).includes("/"))
-          .map(f => f.slice(prefix.length))
-          .filter(n => EXTENSIONS.some(e => n.toLowerCase().endsWith(e)) && !hidden.has(n))
-          .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-        // order: as arranged in the editor (top to bottom, then left to right); new files at the end
-        if (saved && saved.desktop) {
-          const arranged = arrangedFiles(saved).filter(n => names.includes(n));
-          names = arranged.concat(names.filter(n => !arranged.includes(n)));
-        }
-        return names.map(n => encodePath(prefix + n));
-      }
-
-      // 2. No list at all (editor not saved yet): show the files arranged in the editor
-      if (!saved || !saved.desktop) return [];
-      return arrangedFiles(saved).map(f => encodePath(`${ASSET_FOLDER}/${name}/${f}`));
-    })();
-  }
-  return mediaCache[project.slug];
-}
 
 function placeholder(src) {
   const p = document.createElement("div");
@@ -296,26 +132,6 @@ projectList.innerHTML = projects.map(p =>
   `<li><a href="#${p.slug}"><span class="blur">${p.title}</span></a><span class="year">${p.year}</span></li>`
 ).join("");
 
-const sidebar = document.querySelector(".sidebar");
-
-// Touch: a tap switches the blur of the word on for a moment (.tap-blur), the CSS transition
-// fades it in and out. Mouse: the blur comes from hovering, see style.css.
-const TAP_BLUR = 700;                         // milliseconds until the blur is switched off again
-let tapTimer = null;
-function tapBlur(e) {
-  const el = e.target.closest(".sidebar a, .subtitle")?.querySelector(".blur");
-  if (!el) return;
-  sidebar.querySelectorAll(".tap-blur").forEach(other => other.classList.remove("tap-blur"));   // only one word at a time
-  el.classList.add("tap-blur");
-  clearTimeout(tapTimer);
-  tapTimer = setTimeout(() => el.classList.remove("tap-blur"), TAP_BLUR);
-}
-
-// Upright layout: the menu is fixed at the top, the content starts below it
-function updateHeaderHeight() {
-  document.documentElement.style.setProperty("--header-height", sidebar.offsetHeight + "px");
-}
-updateHeaderHeight();
 
 /* ---------- Upright layout: collapsible project list ----------
    Two states: open ("archive −" + project list) and closed ("archive +").
@@ -402,10 +218,8 @@ function menuSettle(dir) {
 
 subtitle.addEventListener("click", () => { if (isUpright()) setMenu(menuState > 0.5 ? 0 : 1, true); });
 
-sidebar.addEventListener("touchstart", e => {
-  tapBlur(e);
-  if (menuState === 0 && !onSubpage()) setMenu(0, false);   // touching the open list on the start page restarts the auto-close timer
-}, { passive: true });
+// touching the open list on the start page restarts the auto-close timer
+sidebar.addEventListener("touchstart", () => { if (menuState === 0 && !onSubpage()) setMenu(0, false); }, { passive: true });
 
 window.addEventListener("scroll", () => {
   const dy = window.scrollY - lastScrollY;
@@ -436,6 +250,10 @@ function startPage() {
   let distance = 0;     // distance travelled since the last new image
   let pool = [];        // all images/videos found across all projects
   let deck = [];        // shuffled deck: an image returns only after all others had their turn
+  // On phones (and in narrow windows) the smaller copy from the folder "small" is used,
+  // made by GitHub when publishing (see pages.yml); if there is none, the original
+  const useSmall = location.protocol.startsWith("http") && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)
+    && (isTouch() || isUpright());
 
   function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
@@ -484,7 +302,10 @@ function startPage() {
     a.style.width = widthPct + "%";
     a.style.left = leftPct + "%";
     a.style.zIndex = layer++;
-    const el = mediaElement(src, project.title, { eager: true });
+    const el = mediaElement(useSmall && !src.toLowerCase().endsWith(".mp4") ? "small/" + src : src, project.title, { eager: true });
+    if (el.tagName === "IMG" && useSmall) {
+      el.onerror = () => { el.onerror = () => el.replaceWith(placeholder(src)); el.src = src; };   // no smaller copy: the original
+    }
     a.appendChild(el);
     const caption = document.createElement("span");
     caption.className = "caption";
@@ -1163,9 +984,8 @@ function textPage(html, title) {
 
 /* ---------- Window size changes (also turning the phone) ---------- */
 let resizeTimer = null;
-function onResize() {
+function onResize() {                        // (the header height is updated by site.js)
   measureList();
-  updateHeaderHeight();
   applyMenu();
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => relayoutCollage && relayoutCollage(), 150);

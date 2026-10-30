@@ -11,7 +11,7 @@
      "w": 49.96
     },
     {
-     "file": "alors_on_danse_vis_nightclub_bw.jpg",
+     "file": "alors_on_danse_visualization_nightclub_bw.jpg",
      "x": 61.86,
      "y": 34.9,
      "w": 23.85
@@ -29,67 +29,67 @@
      "w": 30
     },
     {
-     "file": "alors_on_danse_elevation_street.jpg",
+     "file": "alors_on_danse_elevation_rue_de_la_loi.jpg",
      "x": 6,
      "y": 150.24,
      "w": 45
     },
     {
-     "file": "alors_on_danse_model_1_100_01.jpg",
+     "file": "alors_on_danse_model_1-100_overview.jpg",
      "x": 26,
      "y": 180.74,
      "w": 70
     },
     {
-     "file": "alors_on_danse_axo_nightclub.jpg",
+     "file": "alors_on_danse_axonometry_nightclub.jpg",
      "x": 4,
      "y": 238.58,
      "w": 45
     },
     {
-     "file": "alors_on_danse_vis_nightclub.jpg",
+     "file": "alors_on_danse_visualization_nightclub.jpg",
      "x": 56.22,
      "y": 253.33,
      "w": 39.96
     },
     {
-     "file": "alors_on_danse_floorplan-02.jpg",
+     "file": "alors_on_danse_floorplan_nightclub.jpg",
      "x": 48.18,
      "y": 318.91,
      "w": 40.04
     },
     {
-     "file": "alors_on_danse_vis_nightclub_pilar.jpg",
+     "file": "alors_on_danse_visualization_nightclub_wall.jpg",
      "x": 13.12,
      "y": 294.55,
      "w": 30
     },
     {
-     "file": "alors_on_danse_model_1_100_02.jpg",
+     "file": "alors_on_danse_model_1-100_photo_setup.jpg",
      "x": 4,
      "y": 359.13,
      "w": 45.44
     },
     {
-     "file": "alors_on_danse_model_1_100_03.jpg",
+     "file": "alors_on_danse_model_1-100_composition.jpg",
      "x": 58.22,
      "y": 396.26,
      "w": 30
     },
     {
-     "file": "alors_on_danse_entrance.jpg",
+     "file": "alors_on_danse_entrance_metro_station.jpg",
      "x": 17.41,
      "y": 453.32,
      "w": 51.85
     },
     {
-     "file": "alors_on_danse_floorplan02.jpg",
+     "file": "alors_on_danse_floorplan_regular_floor.jpg",
      "x": 13.12,
      "y": 540.49,
      "w": 70
     },
     {
-     "file": "alors_on_danse_model_1_25_01.jpg",
+     "file": "alors_on_danse_model_1-25_top_view.jpg",
      "x": 51,
      "y": 596.88,
      "w": 43.44
@@ -101,7 +101,7 @@
      "w": 41.3
     },
     {
-     "file": "alors_on_danse_vis_hallway.jpg",
+     "file": "alors_on_danse_visualization_hallway.jpg",
      "x": 13.12,
      "y": 677.73,
      "w": 45
@@ -113,43 +113,43 @@
      "w": 52.22
     },
     {
-     "file": "alors_on_danse_model_1_25_02.jpg",
+     "file": "alors_on_danse_model_1-25_hallway.jpg",
      "x": 63.03,
      "y": 765.11,
      "w": 26.81
     },
     {
-     "file": "alors_on_danse_axo_bathroom.jpg",
+     "file": "alors_on_danse_axonometry_bathroom.jpg",
      "x": 4,
      "y": 796.8,
      "w": 42.18
     },
     {
-     "file": "alors_on_danse_vis_bathroom.jpg",
+     "file": "alors_on_danse_visualization_bathroom.jpg",
      "x": 53.88,
      "y": 822.81,
      "w": 40.56
     },
     {
-     "file": "alors_on_danse_model_1_25_03.jpg",
+     "file": "alors_on_danse_model_1-25_installations.jpg",
      "x": 6,
      "y": 864.56,
      "w": 30
     },
     {
-     "file": "alors_on_danse_model_1_25_04.jpg",
+     "file": "alors_on_danse_model_1-25_podest.jpg",
      "x": 59.84,
      "y": 896.98,
      "w": 30
     },
     {
-     "file": "alors_on_danse_vis_kitchen.jpg",
+     "file": "alors_on_danse_visualization_kitchen.jpg",
      "x": 6,
      "y": 932.44,
      "w": 41
     },
     {
-     "file": "alors_on_danse_vis_dining.jpg",
+     "file": "alors_on_danse_visualization_dining.jpg",
      "x": 43.12,
      "y": 1003.8,
      "w": 45
@@ -159,14 +159,270 @@
      "x": 43.88,
      "y": 499.51,
      "w": 52.3
+    },
+    {
+     "file": "alors_on_danse_model_1-25_composition.jpg",
+     "x": 4,
+     "y": 1071.8,
+     "w": 45
     }
-   ]
+   ],
+   "cover": "alors_on_danse_visualization_nightclub_bw.jpg",
+   "pdf": {
+    "spreads": 5,
+    "items": [
+     {
+      "file": "alors_on_danse_siteplan.jpg",
+      "spread": 0,
+      "x": 15,
+      "y": 70.18,
+      "w": 156.75
+     },
+     {
+      "file": "alors_on_danse_elevation_rue_de_la_loi.jpg",
+      "spread": 0,
+      "x": 15,
+      "y": 15,
+      "w": 156.75,
+      "crop": {
+       "l": 0,
+       "t": 0.1774,
+       "r": 0,
+       "b": 0.1016
+      }
+     },
+     {
+      "file": "alors_on_danse_model_1-100_overview.jpg",
+      "spread": 2,
+      "x": 225,
+      "y": 15,
+      "w": 156.75,
+      "crop": {
+       "l": 0.121,
+       "t": 0,
+       "r": 0.0349,
+       "b": 0
+      }
+     },
+     {
+      "file": "alors_on_danse_axonometry_nightclub.jpg",
+      "spread": 1,
+      "x": 102,
+      "y": 100.99,
+      "w": 93,
+      "crop": {
+       "l": 0.0381,
+       "t": 0,
+       "r": 0.0432,
+       "b": 0
+      }
+     },
+     {
+      "file": "alors_on_danse_visualization_nightclub.jpg",
+      "spread": 1,
+      "x": 248.57,
+      "y": 15,
+      "w": 156.85
+     },
+     {
+      "file": "alors_on_danse_visualization_nightclub_wall.jpg",
+      "spread": 1,
+      "x": 225,
+      "y": 168.78,
+      "w": 73.71
+     },
+     {
+      "file": "alors_on_danse_floorplan_nightclub.jpg",
+      "spread": 1,
+      "x": 102,
+      "y": 14.99,
+      "w": 93,
+      "crop": {
+       "l": 0,
+       "t": 0,
+       "r": 0.1791,
+       "b": 0
+      }
+     },
+     {
+      "file": "alors_on_danse_model_1-100_photo_setup.jpg",
+      "spread": 2,
+      "x": 108,
+      "y": 52.01,
+      "w": 63.75,
+      "crop": {
+       "l": 0,
+       "t": 0.1065,
+       "r": 0,
+       "b": 0
+      }
+     },
+     {
+      "file": "alors_on_danse_model_1-100_composition.jpg",
+      "spread": 2,
+      "x": 38.25,
+      "y": 144,
+      "w": 63.75,
+      "crop": {
+       "l": 0,
+       "t": 0.0532,
+       "r": 0,
+       "b": 0.0532
+      }
+     },
+     {
+      "file": "alors_on_danse_entrance_metro_station.jpg",
+      "spread": 0,
+      "x": 248.25,
+      "y": 144,
+      "w": 156.75,
+      "crop": {
+       "l": 0.0248,
+       "t": 0,
+       "r": 0.0194,
+       "b": 0
+      }
+     },
+     {
+      "file": "alors_on_danse_section.jpg",
+      "spread": 2,
+      "x": 225,
+      "y": 156.3,
+      "w": 156.75
+     },
+     {
+      "file": "alors_on_danse_floorplan_regular_floor.jpg",
+      "spread": 3,
+      "x": 16.2,
+      "y": 59.34,
+      "w": 178.8,
+      "crop": {
+       "l": 0.0443,
+       "t": 0.1152,
+       "r": 0.0514,
+       "b": 0.0499
+      }
+     },
+     {
+      "file": "alors_on_danse_model_1-25_top_view.jpg",
+      "spread": 3,
+      "x": 271.68,
+      "y": 187,
+      "w": 133.32,
+      "crop": {
+       "l": 0,
+       "t": 0,
+       "r": 0,
+       "b": 0.0941
+      }
+     },
+     {
+      "file": "alors_on_danse_visualization_hallway.jpg",
+      "spread": 4,
+      "x": 15,
+      "y": 52,
+      "w": 162.75,
+      "crop": {
+       "l": 0,
+       "t": 0.0092,
+       "r": 0,
+       "b": 0
+      }
+     },
+     {
+      "file": "alors_on_danse_axonometry_bathroom.jpg",
+      "spread": 4,
+      "x": 318,
+      "y": 147.33,
+      "w": 63.75,
+      "crop": {
+       "l": 0.0431,
+       "t": 0,
+       "r": 0.0411,
+       "b": 0
+      }
+     },
+     {
+      "file": "alors_on_danse_visualization_bathroom.jpg",
+      "spread": 4,
+      "x": 248.25,
+      "y": 144,
+      "w": 63.75,
+      "crop": {
+       "l": 0,
+       "t": 0,
+       "r": 0.0116,
+       "b": 0
+      }
+     },
+     {
+      "file": "alors_on_danse_visualization_kitchen.jpg",
+      "spread": 4,
+      "x": 318,
+      "y": 52,
+      "w": 63.75,
+      "crop": {
+       "l": 0.0122,
+       "t": 0,
+       "r": 0,
+       "b": 0
+      }
+     },
+     {
+      "file": "alors_on_danse_visualization_dining.jpg",
+      "spread": 4,
+      "x": 248.25,
+      "y": 52,
+      "w": 63.75,
+      "crop": {
+       "l": 0.0116,
+       "t": 0,
+       "r": 0,
+       "b": 0
+      }
+     },
+     {
+      "file": "alors_on_danse_model_1-25_composition.jpg",
+      "spread": 3,
+      "x": 248.25,
+      "y": 15,
+      "w": 156.75,
+      "crop": {
+       "l": 0.0267,
+       "t": 0,
+       "r": 0.1292,
+       "b": 0
+      }
+     },
+     {
+      "file": "alors_on_danse_elevation.jpg",
+      "spread": 0,
+      "x": 294.75,
+      "y": 15,
+      "w": 110.25,
+      "crop": {
+       "l": 0,
+       "t": 0.0709,
+       "r": 0,
+       "b": 0
+      }
+     }
+    ],
+    "hidden": [
+     "alors_on_danse_newspaper.jpg",
+     "alors_on_danse_model_1-25_hallway.jpg",
+     "alors_on_danse_model_1-25_installations.jpg",
+     "alors_on_danse_model_1-25_podest.jpg",
+     "alors_on_danse_visualization_nightclub_bw.jpg"
+    ],
+    "captions": {}
+   }
   },
   "house_of_metal": {
    "hidden": [],
    "desktop": [
     {
-     "file": "house_of_metal_aceton.jpg",
+     "file": "house_of_metal_concept_drawings_aceton.jpg",
      "x": 6.25,
      "y": 4.01,
      "w": 74.22
@@ -196,25 +452,25 @@
      "w": 77.26
     },
     {
-     "file": "house_of_metal_concept_core.jpg",
+     "file": "house_of_metal_concept_served_and_servant_spaces.jpg",
      "x": 55.59,
      "y": 200.58,
      "w": 39.96
     },
     {
-     "file": "house_of_metal_vis_gallery_inside.jpg",
+     "file": "house_of_metal_visualization_gallery_inside.jpg",
      "x": 2.96,
      "y": 217.84,
      "w": 45
     },
     {
-     "file": "house_of_metal_vis_gallery_outside.jpg",
+     "file": "house_of_metal_visualization_gallery_outside.jpg",
      "x": 43.14,
      "y": 298.67,
      "w": 51.3
     },
     {
-     "file": "house_of_metal_vis_workshop_inside.jpg",
+     "file": "house_of_metal_visualization_workshop_inside.jpg",
      "x": 2.96,
      "y": 382.32,
      "w": 78.74
@@ -226,12 +482,133 @@
      "w": 41.81
     },
     {
-     "file": "house_of_metal_vis_workshop_outside.jpg",
+     "file": "house_of_metal_visualization_workshop_outside.jpg",
      "x": 44.75,
      "y": 449.9,
      "w": 51.82
     }
-   ]
+   ],
+   "cover": "house_of_metal_photo_entrance.jpg",
+   "pdf": {
+    "spreads": 4,
+    "items": [
+     {
+      "file": "house_of_metal_concept_drawings_aceton.jpg",
+      "spread": 0,
+      "x": 15,
+      "y": 187,
+      "w": 156.75,
+      "crop": {
+       "l": 0,
+       "t": 0.0148,
+       "r": 0,
+       "b": 0
+      }
+     },
+     {
+      "file": "house_of_metal_concept_groove.jpg",
+      "spread": 0,
+      "x": 84.75,
+      "y": 15,
+      "w": 110.25,
+      "crop": {
+       "l": 0,
+       "t": 0,
+       "r": 0,
+       "b": 0.0325
+      }
+     },
+     {
+      "file": "house_of_metal_photo_entrance.jpg",
+      "spread": 0,
+      "x": 248.25,
+      "y": 58,
+      "w": 156.75,
+      "crop": {
+       "l": 0,
+       "t": 0.09,
+       "r": 0,
+       "b": 0.0268
+      }
+     },
+     {
+      "file": "house_of_metal_concept_served_and_servant_spaces.jpg",
+      "spread": 3,
+      "x": 271.5,
+      "y": 187,
+      "w": 133.5,
+      "crop": {
+       "l": 0.0467,
+       "t": 0.1199,
+       "r": 0.0575,
+       "b": 0.0697
+      }
+     },
+     {
+      "file": "house_of_metal_visualization_gallery_inside.jpg",
+      "spread": 1,
+      "x": 225,
+      "y": 58,
+      "w": 87,
+      "crop": {
+       "l": 0,
+       "t": 0.0457,
+       "r": 0,
+       "b": 0.0178
+      }
+     },
+     {
+      "file": "house_of_metal_visualization_gallery_outside.jpg",
+      "spread": 1,
+      "x": 15,
+      "y": 57.98,
+      "w": 156.75
+     },
+     {
+      "file": "house_of_metal_visualization_workshop_inside.jpg",
+      "spread": 2,
+      "x": 15,
+      "y": 144,
+      "w": 156.99,
+      "crop": {
+       "l": 0.1218,
+       "t": 0,
+       "r": 0.0327,
+       "b": 0
+      }
+     },
+     {
+      "file": "house_of_metal_visualization_workshop_outside.jpg",
+      "spread": 2,
+      "x": 294.75,
+      "y": 15,
+      "w": 110.25,
+      "crop": {
+       "l": 0,
+       "t": 0.0325,
+       "r": 0,
+       "b": 0
+      }
+     },
+     {
+      "file": "house_of_metal_concept_material.jpg",
+      "spread": 2,
+      "x": 312,
+      "y": 131.15,
+      "w": 93,
+      "crop": {
+       "l": 0,
+       "t": 0,
+       "r": 0.1204,
+       "b": 0.0914
+      }
+     }
+    ],
+    "hidden": [
+     "house_of_metal_concept_circulation.jpg"
+    ],
+    "captions": {}
+   }
   },
   "la_rotante": {
    "hidden": [],
@@ -255,19 +632,19 @@
      "w": 47
     },
     {
-     "file": "la_rotante_box_01.jpg",
+     "file": "la_rotante_unboxing.jpg",
      "x": 32.92,
      "y": 367.66,
      "w": 28.7
     },
     {
-     "file": "la_rotante_box_02.jpg",
+     "file": "la_rotante_cardboard_box.jpg",
      "x": 4,
      "y": 317.98,
      "w": 28.92
     },
     {
-     "file": "la_rotante_cad.jpg",
+     "file": "la_rotante_cad_drawing.jpg",
      "x": 22.25,
      "y": 74.93,
      "w": 30.6
@@ -285,7 +662,7 @@
      "w": 21.82
     },
     {
-     "file": "la_rotante_prototyp_02.jpg",
+     "file": "la_rotante_after_sandblast.jpg",
      "x": 4,
      "y": 402.3,
      "w": 71.08
@@ -308,42 +685,266 @@
      "y": 3.53,
      "w": 39.52
     }
-   ]
+   ],
+   "cover": "la_rotante_silver.jpg",
+   "pdf": {
+    "spreads": 3,
+    "items": [
+     {
+      "file": "la_rotante_silver.jpg",
+      "spread": 0,
+      "x": 225,
+      "y": 58,
+      "w": 156.75,
+      "crop": {
+       "l": 0,
+       "t": 0.1168,
+       "r": 0,
+       "b": 0
+      }
+     },
+     {
+      "file": "la_rotante_cad_drawing.jpg",
+      "spread": 0,
+      "x": 38.25,
+      "y": 58,
+      "w": 63.75,
+      "crop": {
+       "l": 0,
+       "t": 0.0101,
+       "r": 0,
+       "b": 0
+      }
+     },
+     {
+      "file": "la_rotante_laser_cut.jpg",
+      "spread": 0,
+      "x": 108,
+      "y": 58,
+      "w": 63.75,
+      "crop": {
+       "l": 0,
+       "t": 0.0367,
+       "r": 0,
+       "b": 0.022
+      }
+     },
+     {
+      "file": "la_rotante_bend.jpg",
+      "spread": 0,
+      "x": 38.25,
+      "y": 144,
+      "w": 63.75,
+      "crop": {
+       "l": 0,
+       "t": 0,
+       "r": 0,
+       "b": 0.0587
+      }
+     },
+     {
+      "file": "la_rotante_prototyp.jpg",
+      "spread": 2,
+      "x": 225,
+      "y": 15,
+      "w": 180,
+      "crop": {
+       "l": 0,
+       "t": 0,
+       "r": 0.0306,
+       "b": 0
+      }
+     },
+     {
+      "file": "la_rotante_black.jpg",
+      "spread": 1,
+      "x": 15,
+      "y": 144,
+      "w": 156.75,
+      "crop": {
+       "l": 0.1408,
+       "t": 0,
+       "r": 0.0151,
+       "b": 0
+      }
+     },
+     {
+      "file": "la_rotante_blue.jpg",
+      "spread": 1,
+      "x": 248.25,
+      "y": 15,
+      "w": 156.75,
+      "crop": {
+       "l": 0,
+       "t": 0.1168,
+       "r": 0,
+       "b": 0
+      }
+     },
+     {
+      "file": "la_rotante_in_use.jpg",
+      "spread": 1,
+      "x": 84.75,
+      "y": 15,
+      "w": 110.25,
+      "crop": {
+       "l": 0.0871,
+       "t": 0,
+       "r": 0,
+       "b": 0
+      }
+     },
+     {
+      "file": "la_rotante_unboxing.jpg",
+      "spread": 2,
+      "x": 84.75,
+      "y": 101,
+      "w": 110.25,
+      "crop": {
+       "l": 0.0147,
+       "t": 0,
+       "r": 0.0724,
+       "b": 0
+      }
+     },
+     {
+      "file": "la_rotante_after_sandblast.jpg",
+      "spread": 2,
+      "x": 225,
+      "y": 187,
+      "w": 110.25,
+      "crop": {
+       "l": 0,
+       "t": 0,
+       "r": 0.0871,
+       "b": 0
+      }
+     },
+     {
+      "file": "la_rotante_cardboard_box.jpg",
+      "spread": 2,
+      "x": 84.75,
+      "y": 15,
+      "w": 110.25,
+      "crop": {
+       "l": 0.0298,
+       "t": 0,
+       "r": 0,
+       "b": 0
+      }
+     }
+    ],
+    "hidden": [],
+    "captions": {}
+   }
   },
   "lamina": {
    "hidden": [],
    "desktop": [
     {
-     "file": "Doorhandle.jpg",
+     "file": "lamina_with_door.jpg",
      "x": 2.04,
      "y": 135.98,
      "w": 25.23
     },
     {
-     "file": "DSC_0122.jpg",
+     "file": "lamina_cast_mold.jpg",
      "x": 4.78,
      "y": 43.18,
      "w": 27
     },
     {
-     "file": "DSC_0158.jpg",
+     "file": "lamina_liquid_bronze.jpg",
      "x": 51.63,
      "y": 6.09,
      "w": 40.86
     },
     {
-     "file": "DSC_0221.jpg",
+     "file": "lamina_removal_of_clay.jpg",
      "x": 41.38,
      "y": 79.45,
      "w": 45
     },
     {
-     "file": "IMG_6241.jpg",
+     "file": "lamina_patination.jpg",
      "x": 31.78,
      "y": 162.78,
      "w": 30
     }
-   ]
+   ],
+   "cover": "lamina_liquid_bronze.jpg",
+   "pdf": {
+    "spreads": 2,
+    "items": [
+     {
+      "file": "lamina_liquid_bronze.jpg",
+      "spread": 0,
+      "x": 15,
+      "y": 144,
+      "w": 87,
+      "crop": {
+       "l": 0,
+       "t": 0,
+       "r": 0,
+       "b": 0.0637
+      }
+     },
+     {
+      "file": "lamina_cast_mold.jpg",
+      "spread": 0,
+      "x": 248.25,
+      "y": 15,
+      "w": 156.75,
+      "crop": {
+       "l": 0,
+       "t": 0.117,
+       "r": 0,
+       "b": 0
+      }
+     },
+     {
+      "file": "lamina_removal_of_clay.jpg",
+      "spread": 1,
+      "x": 13.83,
+      "y": 101,
+      "w": 111.42,
+      "crop": {
+       "l": 0,
+       "t": 0.0133,
+       "r": 0,
+       "b": 0
+      }
+     },
+     {
+      "file": "lamina_with_door.jpg",
+      "spread": 1,
+      "x": 341.25,
+      "y": 144,
+      "w": 62.31,
+      "crop": {
+       "l": 0.1686,
+       "t": 0.087,
+       "r": 0.1664,
+       "b": 0.0433
+      }
+     },
+     {
+      "file": "lamina_patination.jpg",
+      "spread": 1,
+      "x": 225,
+      "y": 15,
+      "w": 87,
+      "crop": {
+       "l": 0,
+       "t": 0,
+       "r": 0.0569,
+       "b": 0
+      }
+     }
+    ],
+    "hidden": [],
+    "captions": {}
+   }
   },
   "cool_lab": {
    "hidden": [],
@@ -351,53 +952,53 @@
     {
      "file": "cool_lab_meeting.jpg",
      "x": 21.67,
-     "y": 292.75,
+     "y": 293.25,
      "w": 62.89
     },
     {
-     "file": "cool_lab_Pointcloud.jpg",
+     "file": "cool_lab_pointcloud_campus.jpg",
      "x": 2.94,
      "y": 6.49,
      "w": 56.63
     },
     {
-     "file": "cool_lab_slackline.jpg",
+     "file": "cool_lab_test_slackline.jpg",
      "x": 16.74,
      "y": 139.58,
      "w": 27.82
     },
     {
-     "file": "cool_lab_textile_01.jpg",
+     "file": "cool_lab_textile_closeup.jpg",
      "x": 8.44,
      "y": 60.24,
      "w": 41.51
     },
     {
-     "file": "cool_lab_textile_02.jpg",
+     "file": "cool_lab_test_textile_hanging.jpg",
      "x": 51.78,
      "y": 139.58,
      "w": 45
     },
     {
-     "file": "cool_lab_textile_03.jpg",
+     "file": "cool_lab_textile_installation.jpg",
      "x": 2.94,
      "y": 221.56,
      "w": 45
     },
     {
-     "file": "cool_lab_vis_01.jpg",
+     "file": "cool_lab_visualization_front.jpg",
      "x": 61.85,
      "y": 28.45,
      "w": 27.22
     },
     {
-     "file": "cool_lab_vis_02.jpg",
+     "file": "cool_lab_visualization_bird_eye.jpg",
      "x": 61.85,
      "y": 6.49,
      "w": 27.22
     },
     {
-     "file": "cool_lab_water_mist_test.jpg",
+     "file": "cool_lab_test_water_mist.jpg",
      "x": 59.57,
      "y": 89.35,
      "w": 30
@@ -414,13 +1015,121 @@
      "y": 185.78,
      "w": 30
     }
-   ]
+   ],
+   "cover": "cool_lab_textile_closeup.jpg",
+   "pdf": {
+    "spreads": 2,
+    "items": [
+     {
+      "file": "cool_lab_pointcloud_campus.jpg",
+      "spread": 0,
+      "x": 15,
+      "y": 96,
+      "w": 180,
+      "crop": {
+       "l": 0,
+       "t": 0.077,
+       "r": 0,
+       "b": 0.2553
+      }
+     },
+     {
+      "file": "cool_lab_visualization_bird_eye.jpg",
+      "spread": 0,
+      "x": 225,
+      "y": 187,
+      "w": 110.25,
+      "crop": {
+       "l": 0.0254,
+       "t": 0,
+       "r": 0,
+       "b": 0
+      }
+     },
+     {
+      "file": "cool_lab_visualization_front.jpg",
+      "spread": 0,
+      "x": 225,
+      "y": 11.27,
+      "w": 180,
+      "crop": {
+       "l": 0,
+       "t": 0,
+       "r": 0,
+       "b": 0.0335
+      }
+     },
+     {
+      "file": "cool_lab_textile_closeup.jpg",
+      "spread": 1,
+      "x": 15,
+      "y": 144,
+      "w": 63.75
+     },
+     {
+      "file": "cool_lab_meeting.jpg",
+      "spread": 1,
+      "x": 248.25,
+      "y": 15,
+      "w": 156.75,
+      "crop": {
+       "l": 0,
+       "t": 0,
+       "r": 0.0442,
+       "b": 0
+      }
+     },
+     {
+      "file": "cool_lab_textile_installation.jpg",
+      "spread": 1,
+      "x": 341.25,
+      "y": 187,
+      "w": 63.75,
+      "crop": {
+       "l": 0,
+       "t": 0.0588,
+       "r": 0,
+       "b": 0
+      }
+     },
+     {
+      "file": "cool_lab_test_slackline.jpg",
+      "spread": 1,
+      "x": 15,
+      "y": 52,
+      "w": 63.75,
+      "crop": {
+       "l": 0.0115,
+       "t": 0,
+       "r": 0,
+       "b": 0
+      }
+     },
+     {
+      "file": "cool_lab_test_textile_hanging.jpg",
+      "spread": 1,
+      "x": 84.75,
+      "y": 52,
+      "w": 63.75,
+      "crop": {
+       "l": 0.0116,
+       "t": 0,
+       "r": 0,
+       "b": 0
+      }
+     }
+    ],
+    "hidden": [
+     "cool_lab_test_water_mist.jpg"
+    ],
+    "captions": {}
+   }
   },
   "salt_away": {
    "hidden": [],
    "desktop": [
     {
-     "file": "salt_away_axo.jpg",
+     "file": "salt_away_axonometry.jpg",
      "x": 2.3,
      "y": 69.98,
      "w": 57.89
@@ -432,25 +1141,25 @@
      "w": 30
     },
     {
-     "file": "salt_away_axo_exploded.jpg",
+     "file": "salt_away_axonometry_exploded.jpg",
      "x": 67,
      "y": 117.09,
      "w": 30
     },
     {
-     "file": "salt_away_model_1_1.jpg",
+     "file": "salt_away_model_1-1.jpg",
      "x": 47.78,
      "y": 290.23,
      "w": 39.81
     },
     {
-     "file": "salt_away_model_1_20.jpg",
+     "file": "salt_away_model_1-20.jpg",
      "x": 32.18,
      "y": 214.44,
      "w": 64.82
     },
     {
-     "file": "salt_away_model_1_200.jpg",
+     "file": "salt_away_model_1-200.jpg",
      "x": 47.78,
      "y": 36.22,
      "w": 49.22
@@ -462,13 +1171,13 @@
      "w": 81.59
     },
     {
-     "file": "salt_away_vis_inside.jpg",
+     "file": "salt_away_visualization_workshop.jpg",
      "x": 6,
      "y": 361.09,
      "w": 70
     },
     {
-     "file": "salt_away_vis_outside.jpg",
+     "file": "salt_away_visualization_outside.jpg",
      "x": 2.3,
      "y": 113.54,
      "w": 61.03
@@ -485,85 +1194,242 @@
      "y": 260.5,
      "w": 42.02
     }
-   ]
+   ],
+   "cover": "salt_away_photo_site.jpg",
+   "pdf": {
+    "spreads": 3,
+    "items": [
+     {
+      "file": "salt_away_photo_site.jpg",
+      "spread": 0,
+      "x": 294.75,
+      "y": 14.99,
+      "w": 110.25
+     },
+     {
+      "file": "salt_away_model_1-200.jpg",
+      "spread": 0,
+      "x": 15,
+      "y": 147.87,
+      "w": 179.84
+     },
+     {
+      "file": "salt_away_axonometry.jpg",
+      "spread": 0,
+      "x": 61.5,
+      "y": 15,
+      "w": 133.5,
+      "crop": {
+       "l": 0.043,
+       "t": 0.0703,
+       "r": 0.0435,
+       "b": 0.1556
+      }
+     },
+     {
+      "file": "salt_away_visualization_outside.jpg",
+      "spread": 1,
+      "x": 223.75,
+      "y": 15,
+      "w": 181.25,
+      "crop": {
+       "l": 0,
+       "t": 0.0952,
+       "r": 0,
+       "b": 0
+      }
+     },
+     {
+      "file": "salt_away_axonometry_exploded.jpg",
+      "spread": 1,
+      "x": 318,
+      "y": 151,
+      "w": 87
+     },
+     {
+      "file": "salt_away_section_perspective.jpg",
+      "spread": 1,
+      "x": 15,
+      "y": 69.58,
+      "w": 180,
+      "crop": {
+       "l": 0.0286,
+       "t": 0,
+       "r": 0.026,
+       "b": 0
+      }
+     },
+     {
+      "file": "salt_away_model_1-20.jpg",
+      "spread": 1,
+      "x": 15,
+      "y": 181,
+      "w": 133.5,
+      "crop": {
+       "l": 0,
+       "t": 0,
+       "r": 0,
+       "b": 0.0275
+      }
+     },
+     {
+      "file": "salt_away_rotable_elements.jpg",
+      "spread": 2,
+      "x": 225,
+      "y": 186.82,
+      "w": 180,
+      "crop": {
+       "l": 0,
+       "t": 0.153,
+       "r": 0,
+       "b": 0.2174
+      }
+     },
+     {
+      "file": "salt_away_brine_experiment.JPG",
+      "spread": 2,
+      "x": 108,
+      "y": 15,
+      "w": 63.75,
+      "crop": {
+       "l": 0,
+       "t": 0.0368,
+       "r": 0,
+       "b": 0.022
+      }
+     },
+     {
+      "file": "salt_away_model_1-1.jpg",
+      "spread": 2,
+      "x": 15,
+      "y": 144,
+      "w": 87,
+      "crop": {
+       "l": 0,
+       "t": 0.0422,
+       "r": 0,
+       "b": 0.0213
+      }
+     },
+     {
+      "file": "salt_away_visualization_workshop.jpg",
+      "spread": 2,
+      "x": 241,
+      "y": 15,
+      "w": 164
+     }
+    ],
+    "hidden": [],
+    "captions": {}
+   }
   }
  },
  "ratios": {
-  "alors_on_danse/alors_on_danse_axo_bathroom.jpg": 1.1876,
-  "alors_on_danse/alors_on_danse_axo_nightclub.jpg": 0.7903,
-  "alors_on_danse/alors_on_danse_elevation_street.jpg": 0.4883,
+  "about_me/patrick_walter.jpg": 1.3333,
+  "alors_on_danse/alors_on_danse_axonometry_bathroom.jpg": 1.1876,
+  "alors_on_danse/alors_on_danse_axonometry_nightclub.jpg": 0.7903,
+  "alors_on_danse/alors_on_danse_elevation_rue_de_la_loi.jpg": 0.4883,
   "alors_on_danse/alors_on_danse_elevation.jpg": 0.7821,
-  "alors_on_danse/alors_on_danse_entrance.jpg": 0.75,
+  "alors_on_danse/alors_on_danse_entrance_metro_station.jpg": 0.75,
   "alors_on_danse/alors_on_danse_floorplan_animation.mp4": 1.6564,
-  "alors_on_danse/alors_on_danse_floorplan-02.jpg": 0.7063,
-  "alors_on_danse/alors_on_danse_floorplan02.jpg": 0.737,
-  "alors_on_danse/alors_on_danse_model_1_25_01.jpg": 0.6624,
-  "alors_on_danse/alors_on_danse_model_1_25_02.jpg": 1.5097,
-  "alors_on_danse/alors_on_danse_model_1_25_03.jpg": 1.5097,
-  "alors_on_danse/alors_on_danse_model_1_25_04.jpg": 1.5098,
+  "alors_on_danse/alors_on_danse_floorplan_nightclub.jpg": 0.7063,
+  "alors_on_danse/alors_on_danse_floorplan_regular_floor.jpg": 0.737,
   "alors_on_danse/alors_on_danse_model_1_25_animation.mp4": 0.6622,
-  "alors_on_danse/alors_on_danse_model_1_100_01.jpg": 0.6623,
-  "alors_on_danse/alors_on_danse_model_1_100_02.jpg": 1.5097,
-  "alors_on_danse/alors_on_danse_model_1_100_03.jpg": 1.5097,
+  "alors_on_danse/alors_on_danse_model_1-25_composition.jpg": 0.6623,
+  "alors_on_danse/alors_on_danse_model_1-25_hallway.jpg": 1.5097,
+  "alors_on_danse/alors_on_danse_model_1-25_installations.jpg": 1.5097,
+  "alors_on_danse/alors_on_danse_model_1-25_podest.jpg": 1.5098,
+  "alors_on_danse/alors_on_danse_model_1-25_top_view.jpg": 0.6624,
+  "alors_on_danse/alors_on_danse_model_1-100_composition.jpg": 1.5097,
+  "alors_on_danse/alors_on_danse_model_1-100_overview.jpg": 0.6623,
+  "alors_on_danse/alors_on_danse_model_1-100_photo_setup.jpg": 1.5097,
   "alors_on_danse/alors_on_danse_newspaper.jpg": 1.3333,
   "alors_on_danse/alors_on_danse_section.jpg": 0.7063,
   "alors_on_danse/alors_on_danse_siteplan.jpg": 0.707,
-  "alors_on_danse/alors_on_danse_vis_bathroom.jpg": 1.3333,
-  "alors_on_danse/alors_on_danse_vis_dining.jpg": 1.3333,
-  "alors_on_danse/alors_on_danse_vis_hallway.jpg": 1.3333,
-  "alors_on_danse/alors_on_danse_vis_kitchen.jpg": 1.3325,
-  "alors_on_danse/alors_on_danse_vis_nightclub_bw.jpg": 1.3297,
-  "alors_on_danse/alors_on_danse_vis_nightclub_pilar.jpg": 1.3325,
-  "alors_on_danse/alors_on_danse_vis_nightclub.jpg": 1.3324,
+  "alors_on_danse/alors_on_danse_visualization_bathroom.jpg": 1.3333,
+  "alors_on_danse/alors_on_danse_visualization_dining.jpg": 1.3333,
+  "alors_on_danse/alors_on_danse_visualization_hallway.jpg": 1.3333,
+  "alors_on_danse/alors_on_danse_visualization_kitchen.jpg": 1.3325,
+  "alors_on_danse/alors_on_danse_visualization_nightclub_bw.jpg": 1.3297,
+  "alors_on_danse/alors_on_danse_visualization_nightclub_wall.jpg": 1.3325,
+  "alors_on_danse/alors_on_danse_visualization_nightclub.jpg": 1.3324,
   "cool_lab/cool_lab_build.mp4": 0.7895,
   "cool_lab/cool_lab_meeting.jpg": 0.75,
-  "cool_lab/cool_lab_Pointcloud.jpg": 0.7072,
-  "cool_lab/cool_lab_slackline.jpg": 1.3335,
-  "cool_lab/cool_lab_textile_01.jpg": 1.3333,
-  "cool_lab/cool_lab_textile_02.jpg": 1.3333,
-  "cool_lab/cool_lab_textile_03.jpg": 1.3333,
-  "cool_lab/cool_lab_vis_01.jpg": 0.707,
-  "cool_lab/cool_lab_vis_02.jpg": 0.7072,
-  "cool_lab/cool_lab_water_mist_test.jpg": 1.3333,
+  "cool_lab/cool_lab_pointcloud_campus.jpg": 0.7072,
+  "cool_lab/cool_lab_test_slackline.jpg": 1.3335,
+  "cool_lab/cool_lab_test_textile_hanging.jpg": 1.3333,
+  "cool_lab/cool_lab_test_water_mist.jpg": 1.3333,
+  "cool_lab/cool_lab_textile_closeup.jpg": 1.3333,
+  "cool_lab/cool_lab_textile_installation.jpg": 1.3333,
+  "cool_lab/cool_lab_visualization_bird_eye.jpg": 0.7072,
+  "cool_lab/cool_lab_visualization_front.jpg": 0.707,
   "cool_lab/cool_lab_watercan.mp4": 1.3333,
-  "house_of_metal/house_of_metal_aceton.jpg": 0.518,
   "house_of_metal/house_of_metal_concept_circulation.jpg": 0.6624,
-  "house_of_metal/house_of_metal_concept_core.jpg": 0.6624,
+  "house_of_metal/house_of_metal_concept_drawings_aceton.jpg": 0.518,
   "house_of_metal/house_of_metal_concept_groove.jpg": 0.75,
   "house_of_metal/house_of_metal_concept_material.jpg": 1.414,
+  "house_of_metal/house_of_metal_concept_served_and_servant_spaces.jpg": 0.6624,
   "house_of_metal/house_of_metal_floorplan_animation.mp4": 0.6261,
   "house_of_metal/house_of_metal_photo_entrance.jpg": 1.5097,
-  "house_of_metal/house_of_metal_vis_gallery_inside.jpg": 1.5097,
-  "house_of_metal/house_of_metal_vis_gallery_outside.jpg": 1.3333,
-  "house_of_metal/house_of_metal_vis_workshop_inside.jpg": 0.6624,
-  "house_of_metal/house_of_metal_vis_workshop_outside.jpg": 0.75,
+  "house_of_metal/house_of_metal_visualization_gallery_inside.jpg": 1.5097,
+  "house_of_metal/house_of_metal_visualization_gallery_outside.jpg": 1.3333,
+  "house_of_metal/house_of_metal_visualization_workshop_inside.jpg": 0.6624,
+  "house_of_metal/house_of_metal_visualization_workshop_outside.jpg": 0.75,
+  "la_rotante/la_rotante_after_sandblast.jpg": 0.6624,
   "la_rotante/la_rotante_bend.jpg": 1.3332,
   "la_rotante/la_rotante_black.jpg": 0.6624,
   "la_rotante/la_rotante_blue.jpg": 1.5097,
-  "la_rotante/la_rotante_box_01.jpg": 0.6624,
-  "la_rotante/la_rotante_box_02.jpg": 0.704,
-  "la_rotante/la_rotante_cad.jpg": 1.2678,
+  "la_rotante/la_rotante_cad_drawing.jpg": 1.2678,
+  "la_rotante/la_rotante_cardboard_box.jpg": 0.704,
   "la_rotante/la_rotante_in_use.jpg": 0.6624,
   "la_rotante/la_rotante_laser_cut.jpg": 1.3332,
-  "la_rotante/la_rotante_prototyp_02.jpg": 0.6624,
   "la_rotante/la_rotante_prototyp.jpg": 0.6624,
   "la_rotante/la_rotante_rotation.mp4": 1.3333,
   "la_rotante/la_rotante_silver.jpg": 1.5097,
-  "lamina/Doorhandle.jpg": 1.5094,
-  "lamina/DSC_0122.jpg": 1.51,
-  "lamina/DSC_0158.jpg": 1.51,
-  "lamina/DSC_0221.jpg": 1.51,
-  "lamina/IMG_6241.jpg": 1.3333,
-  "salt_away/salt_away_axo_exploded.jpg": 1.3333,
-  "salt_away/salt_away_axo.jpg": 0.7072,
+  "la_rotante/la_rotante_unboxing.jpg": 0.6624,
+  "lamina/lamina_cast_mold.jpg": 1.51,
+  "lamina/lamina_liquid_bronze.jpg": 1.51,
+  "lamina/lamina_patination.jpg": 1.3333,
+  "lamina/lamina_removal_of_clay.jpg": 1.51,
+  "lamina/lamina_with_door.jpg": 1.5094,
+  "salt_away/salt_away_axonometry_exploded.jpg": 1.3333,
+  "salt_away/salt_away_axonometry.jpg": 0.7072,
   "salt_away/salt_away_brine_experiment.JPG": 1.3333,
-  "salt_away/salt_away_model_1_1.jpg": 1.5097,
-  "salt_away/salt_away_model_1_20.jpg": 0.6624,
-  "salt_away/salt_away_model_1_200.jpg": 0.6624,
+  "salt_away/salt_away_model_1-1.jpg": 1.5097,
+  "salt_away/salt_away_model_1-20.jpg": 0.6624,
+  "salt_away/salt_away_model_1-200.jpg": 0.6624,
   "salt_away/salt_away_photo_site.jpg": 1.3835,
   "salt_away/salt_away_rotable_elements.jpg": 0.7075,
   "salt_away/salt_away_section_perspective.jpg": 0.3593,
-  "salt_away/salt_away_vis_inside.jpg": 0.75,
-  "salt_away/salt_away_vis_outside.jpg": 0.75
+  "salt_away/salt_away_visualization_outside.jpg": 0.75,
+  "salt_away/salt_away_visualization_workshop.jpg": 0.75
+ },
+ "pdf": {
+  "margin": 15,
+  "about": {
+   "items": [
+    {
+     "file": "patrick_walter.jpg",
+     "spread": 0,
+     "x": 15,
+     "y": 187,
+     "w": 63.75,
+     "crop": {
+      "l": 0,
+      "t": 0.0588,
+      "r": 0,
+      "b": 0
+     }
+    }
+   ],
+   "hidden": [],
+   "spreads": 1
+  },
+  "grid": {
+   "columns": 8,
+   "rows": 6,
+   "gutter": 6,
+   "rowGutter": 6
+  }
  }
 }
