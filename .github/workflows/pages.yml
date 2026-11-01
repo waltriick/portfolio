@@ -42,7 +42,7 @@ jobs:
           python3 - <<'PY'
           import os, shutil
           from PIL import Image, ImageOps
-          MAX = 1000
+          MAX = 900
           count = 0
           for root, _, files in os.walk("assets"):
               for f in files:

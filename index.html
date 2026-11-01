@@ -65,7 +65,7 @@ const FLOAT = {
   startCount: 4,      // how many images are already on screen when the page loads
   scrollStrength: 6,  // how strongly scrolling pushes the images
   scrollGlide: 0.9,   // 0 = stops immediately, closer to 1 = glides on longer
-  ahead: 4            // phones: images loaded and unpacked in advance, before they appear
+  ahead: 4            // how many of the next images are loaded into the cache in advance
 };
 
 /* Images that are not arranged in the editor yet (must match NEW_WIDTH in editor.html) */
@@ -253,40 +253,26 @@ function startPage() {
   let deck = [];        // shuffled deck: an image returns only after all others had their turn
   // On touch screens (phones, tablets) the smaller copy from the folder "small" is used,
   // made by GitHub when publishing (see pages.yml); if there is none, the original
-  const phone = isTouch();                   // touch only: with a mouse (also in a narrow window) everything stays as before
-  const useSmall = phone && location.protocol.startsWith("http") && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  const useSmall = location.protocol.startsWith("http") && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)
+    && isTouch();
+  const fileFor = src => useSmall && !src.toLowerCase().endsWith(".mp4") ? "small/" + src : src;
 
-  // Phones: a phone stalls for a moment whenever it unpacks a new image while the images move.
-  // So there the next images are loaded AND unpacked in advance ("ready"); a new image only
-  // enters once one is ready. (Computers don't need this: they load as before.)
-  const ready = [];     // loaded and unpacked: { project, src, el }
-  let preparing = 0;
-  function srcFor(src) { return useSmall && !src.toLowerCase().endsWith(".mp4") ? "small/" + src : src; }
-  function load({ project, src }) {
-    if (src.toLowerCase().endsWith(".mp4")) return Promise.resolve(mediaElement(src, project.title, { eager: true }));
-    return new Promise(resolve => {
-      const img = new Image();
-      img.alt = project.title;
-      img.decoding = "async";
-      img.onload = () => (img.decode ? img.decode() : Promise.resolve()).catch(() => {}).then(() => resolve(img));
-      img.onerror = () => {
-        if (img.src.includes("/small/")) img.src = src;  // no smaller copy: the original
-        else resolve(placeholder(src));
-      };
-      img.src = srcFor(src);
-    });
-  }
-  function prepare() {
-    while (phone && pool.length && ready.length + preparing < FLOAT.ahead) {
-      const m = nextMedia();
-      preparing++;
-      load(m).then(el => {
-        preparing--;
-        if (run !== floatRun) return;          // page changed meanwhile
-        ready.push({ ...m, el });
-        prepare();
-      });
-    }
+  // The next images of the deck are loaded into the browser cache in the background,
+  // one after another and without being shown. When one of them appears, it comes from the cache
+  // (the browser then unpacks it itself, at the size it is shown, as always).
+  const warmed = new Set();
+  let warming = null;                          // the image being loaded right now
+  function warmUp() {
+    if (warming || run !== floatRun) return;
+    const next = deck.slice(0, FLOAT.ahead).find(m => !warmed.has(m.src) && !m.src.toLowerCase().endsWith(".mp4"));
+    if (!next) return;
+    warming = new Image();
+    warming.onload = () => { warmed.add(next.src); warming = null; warmUp(); };
+    warming.onerror = () => {                  // no smaller copy: the original instead
+      if (warming.src.includes("/small/")) { warming.src = next.src; return; }
+      warmed.add(next.src); warming = null; warmUp();
+    };
+    warming.src = fileFor(next.src);
   }
 
   function shuffle(arr) {
@@ -298,7 +284,7 @@ function startPage() {
   }
 
   function nextMedia() {
-    const onScreen = new Set(items.map(item => item.src).concat(ready.map(m => m.src)));
+    const onScreen = new Set(items.map(item => item.src));
     if (!deck.length) deck = shuffle([...pool]);
     let i = deck.findIndex(m => !onScreen.has(m.src));   // never the same image twice at once
     if (i < 0) i = 0;
@@ -325,22 +311,24 @@ function startPage() {
   }
 
   function addImage(y) {
-    const next = phone ? ready.shift() : nextMedia();
-    const { project, src } = next;
-    if (phone) prepare();                      // the next one starts loading right away
+    const { project, src } = nextMedia();
     const a = document.createElement("a");
     a.href = "#" + project.slug;
     const widthPct = isUpright() ? random(FLOAT.widthMinMobile, FLOAT.widthMaxMobile) : random(FLOAT.widthMin, FLOAT.widthMax);
     const duration = random(FLOAT.durationMin, FLOAT.durationMax);
-    const loaded = phone && next.el.naturalWidth ? next.el.naturalHeight / next.el.naturalWidth : 0;
-    const estimate = area.clientWidth * widthPct / 100 * (loaded || 0.75);   // height (estimated until the image has loaded)
+    const estimate = area.clientWidth * widthPct / 100 * 0.75;   // height before the image has loaded
     if (y === "top") y = -estimate - random(20, 80);
     const leftPct = bestPosition(widthPct, y, estimate);
     a.style.width = widthPct + "%";
     a.style.left = leftPct + "%";
     a.style.zIndex = layer++;
-    const el = phone ? next.el : mediaElement(src, project.title, { eager: true });
+    const el = mediaElement(fileFor(src), project.title, { eager: true });
+    if (el.tagName === "IMG" && useSmall) {
+      el.onerror = () => { el.onerror = () => el.replaceWith(placeholder(src)); el.src = src; };   // no smaller copy: the original
+    }
     a.appendChild(el);
+    warmed.add(src);
+    warmUp();                                  // the next ones into the cache
     const caption = document.createElement("span");
     caption.className = "caption";
     caption.textContent = project.title;
@@ -350,7 +338,7 @@ function startPage() {
     const item = {
       el: a, y, src,
       left: leftPct, width: widthPct,    // position and width in % (remembered, so nothing has to be measured)
-      ratio: loaded || 0.75,             // height / width, known once the image has loaded
+      ratio: 0.75,                       // height / width, known once the image has loaded
       height: () => area.clientWidth * item.width / 100 * item.ratio,
       speed: height() / duration,        // own speed in px/s
       factor: avgDuration / duration,    // faster images react more strongly -> sense of depth
@@ -463,10 +451,8 @@ function startPage() {
     distance += (baseSpeed + push) * dt;
     const gapPx = (h / avgDuration) * (isUpright() ? FLOAT.gapMobile : FLOAT.gap);
     // at most one new image per frame, also when scrolling fast (keeps the page smooth)
-    // (phones: only once an image is ready; if none is yet, the next one comes as soon as it is)
-    const canAdd = !phone || ready.length > 0;
-    if (canAdd && distance >= gapPx) { addImage(h + random(0, 60)); distance = Math.min(distance - gapPx, gapPx); }
-    else if (canAdd && distance <= -gapPx) { addImage("top"); distance = Math.max(distance + gapPx, -gapPx); }
+    if (distance >= gapPx) { addImage(h + random(0, 60)); distance = Math.min(distance - gapPx, gapPx); }
+    else if (distance <= -gapPx) { addImage("top"); distance = Math.max(distance + gapPx, -gapPx); }
 
     // Remove images that have left the area
     items = items.filter(item => {
@@ -488,21 +474,8 @@ function startPage() {
       if (!pool.length) return;
       // spread evenly over the height at the start
       const count = isUpright() ? FLOAT.startCountMobile : FLOAT.startCount;
-      const spots = Array.from({ length: count }, (_, i) => (i + random(0.1, 0.6)) / count * height());
-      if (!phone) spots.forEach(y => addImage(y));
-      else {                                    // phones: each first image appears in its spot once it is ready
-        const started = performance.now();
-        const fill = () => {
-          if (run !== floatRun) return;
-          while (ready.length && spots.length) {
-            const moved = reducedMotion ? 0 : (performance.now() - started) / 1000 * height() / avgDuration;
-            addImage(spots.shift() - moved);    // as if it had moved along since the start
-          }
-          if (spots.length) setTimeout(fill, 50);
-        };
-        prepare();
-        fill();
-      }
+      for (let i = 0; i < count; i++)
+        addImage((i + random(0.1, 0.6)) / count * height());
       last = performance.now();
       requestAnimationFrame(step);
     });
