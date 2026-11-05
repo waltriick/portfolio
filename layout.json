@@ -11,7 +11,7 @@
      "w": 49.96
     },
     {
-     "file": "alors_on_danse_visualization_nightclub_bw.jpg",
+     "file": "alors_on_danse_visualization_nightclub_crowded.jpg",
      "x": 61.86,
      "y": 34.9,
      "w": 23.85
@@ -59,7 +59,7 @@
      "w": 40.04
     },
     {
-     "file": "alors_on_danse_visualization_nightclub_wall.jpg",
+     "file": "alors_on_danse_visualization_nightclub_seperating_walls.jpg",
      "x": 13.12,
      "y": 294.55,
      "w": 30
@@ -167,9 +167,9 @@
      "w": 45
     }
    ],
-   "cover": "alors_on_danse_visualization_nightclub_bw.jpg",
+   "cover": "alors_on_danse_visualization_nightclub_crowded.jpg",
    "pdf": {
-    "spreads": 5,
+    "spreads": 6,
     "items": [
      {
       "file": "alors_on_danse_siteplan.jpg",
@@ -225,7 +225,7 @@
       "w": 156.85
      },
      {
-      "file": "alors_on_danse_visualization_nightclub_wall.jpg",
+      "file": "alors_on_danse_visualization_nightclub_seperating_walls.jpg",
       "spread": 1,
       "x": 225,
       "y": 168.78,
@@ -413,7 +413,7 @@
      "alors_on_danse_model_1-25_hallway.jpg",
      "alors_on_danse_model_1-25_installations.jpg",
      "alors_on_danse_model_1-25_podest.jpg",
-     "alors_on_danse_visualization_nightclub_bw.jpg"
+     "alors_on_danse_visualization_nightclub_crowded.jpg"
     ],
     "captions": {},
     "texts": [
@@ -451,7 +451,7 @@
    "hidden": [],
    "desktop": [
     {
-     "file": "house_of_metal_concept_drawings_aceton.jpg",
+     "file": "house_of_metal_concept_drawings_with_aceton.jpg",
      "x": 6.25,
      "y": 4.01,
      "w": 74.22
@@ -469,7 +469,7 @@
      "w": 32.89
     },
     {
-     "file": "house_of_metal_concept_groove.jpg",
+     "file": "house_of_metal_concept_vinyl_groove.jpg",
      "x": 6.25,
      "y": 55.11,
      "w": 29.1
@@ -519,10 +519,10 @@
    ],
    "cover": "house_of_metal_photo_entrance.jpg",
    "pdf": {
-    "spreads": 4,
+    "spreads": 5,
     "items": [
      {
-      "file": "house_of_metal_concept_drawings_aceton.jpg",
+      "file": "house_of_metal_concept_drawings_with_aceton.jpg",
       "spread": 0,
       "x": 15,
       "y": 187,
@@ -535,7 +535,7 @@
       }
      },
      {
-      "file": "house_of_metal_concept_groove.jpg",
+      "file": "house_of_metal_concept_vinyl_groove.jpg",
       "spread": 0,
       "x": 84.75,
       "y": 15,
@@ -636,7 +636,8 @@
     "hidden": [
      "house_of_metal_concept_circulation.jpg"
     ],
-    "captions": {}
+    "captions": {},
+    "texts": []
    }
   },
   "la_rotante": {
@@ -645,19 +646,19 @@
    ],
    "desktop": [
     {
-     "file": "la_rotante_bend.jpg",
+     "file": "la_rotante_bending.jpg",
      "x": 4,
      "y": 112.37,
      "w": 22.85
     },
     {
-     "file": "la_rotante_black.jpg",
+     "file": "la_rotante_black_finish.jpg",
      "x": 58.19,
      "y": 203.71,
      "w": 35.59
     },
     {
-     "file": "la_rotante_blue.jpg",
+     "file": "la_rotante_blue_finish.jpg",
      "x": 4,
      "y": 219.91,
      "w": 47
@@ -675,7 +676,7 @@
      "w": 28.92
     },
     {
-     "file": "la_rotante_cad_drawing.jpg",
+     "file": "la_rotante_cad_drawing_for_production.jpg",
      "x": 58.19,
      "y": 48.81,
      "w": 40
@@ -687,7 +688,7 @@
      "w": 56.41
     },
     {
-     "file": "la_rotante_laser_cut.jpg",
+     "file": "la_rotante_waterjet_cut.jpg",
      "x": 31.39,
      "y": 74.17,
      "w": 22.85
@@ -699,7 +700,7 @@
      "w": 71.08
     },
     {
-     "file": "la_rotante_prototyp.jpg",
+     "file": "la_rotante_prototype.jpg",
      "x": 42.81,
      "y": 118.03,
      "w": 52.26
@@ -711,7 +712,7 @@
      "w": 30.45
     },
     {
-     "file": "la_rotante_silver.jpg",
+     "file": "la_rotante_raw_aluminium_finish.jpg",
      "x": 4,
      "y": 3.53,
      "w": 39.52
@@ -723,12 +724,12 @@
      "w": 40.93
     }
    ],
-   "cover": "la_rotante_silver.jpg",
+   "cover": "la_rotante_raw_aluminium_finish.jpg",
    "pdf": {
-    "spreads": 3,
+    "spreads": 5,
     "items": [
      {
-      "file": "la_rotante_silver.jpg",
+      "file": "la_rotante_raw_aluminium_finish.jpg",
       "spread": 0,
       "x": 225,
       "y": 58,
@@ -741,7 +742,7 @@
       }
      },
      {
-      "file": "la_rotante_cad_drawing.jpg",
+      "file": "la_rotante_cad_drawing_for_production.jpg",
       "spread": 0,
       "x": 38.25,
       "y": 58,
@@ -754,7 +755,7 @@
       }
      },
      {
-      "file": "la_rotante_laser_cut.jpg",
+      "file": "la_rotante_waterjet_cut.jpg",
       "spread": 0,
       "x": 108,
       "y": 58,
@@ -767,7 +768,7 @@
       }
      },
      {
-      "file": "la_rotante_bend.jpg",
+      "file": "la_rotante_bending.jpg",
       "spread": 0,
       "x": 38.25,
       "y": 144,
@@ -780,7 +781,7 @@
       }
      },
      {
-      "file": "la_rotante_prototyp.jpg",
+      "file": "la_rotante_prototype.jpg",
       "spread": 2,
       "x": 225,
       "y": 15,
@@ -793,7 +794,7 @@
       }
      },
      {
-      "file": "la_rotante_black.jpg",
+      "file": "la_rotante_black_finish.jpg",
       "spread": 1,
       "x": 15,
       "y": 144,
@@ -806,7 +807,7 @@
       }
      },
      {
-      "file": "la_rotante_blue.jpg",
+      "file": "la_rotante_blue_finish.jpg",
       "spread": 1,
       "x": 248.25,
       "y": 15,
@@ -887,7 +888,8 @@
     "hidden": [
      "la_rotante_detail.jpg"
     ],
-    "captions": {}
+    "captions": {},
+    "texts": []
    },
    "coverPos": {
     "x": 0.5,
@@ -898,7 +900,7 @@
    "hidden": [],
    "desktop": [
     {
-     "file": "lamina_with_door.jpg",
+     "file": "lamina_placment_in_door.jpg",
      "x": 2.04,
      "y": 135.98,
      "w": 25.23
@@ -922,7 +924,7 @@
      "w": 45
     },
     {
-     "file": "lamina_patination.jpg",
+     "file": "lamina_patination_process.jpg",
      "x": 31.78,
      "y": 162.78,
      "w": 30
@@ -930,7 +932,7 @@
    ],
    "cover": "lamina_liquid_bronze.jpg",
    "pdf": {
-    "spreads": 2,
+    "spreads": 3,
     "items": [
      {
       "file": "lamina_liquid_bronze.jpg",
@@ -972,7 +974,7 @@
       }
      },
      {
-      "file": "lamina_with_door.jpg",
+      "file": "lamina_placment_in_door.jpg",
       "spread": 1,
       "x": 341.25,
       "y": 144,
@@ -985,7 +987,7 @@
       }
      },
      {
-      "file": "lamina_patination.jpg",
+      "file": "lamina_patination_process.jpg",
       "spread": 1,
       "x": 225,
       "y": 15,
@@ -999,7 +1001,8 @@
      }
     ],
     "hidden": [],
-    "captions": {}
+    "captions": {},
+    "texts": []
    },
    "coverPos": {
     "x": 0.5,
@@ -1010,13 +1013,13 @@
    "hidden": [],
    "desktop": [
     {
-     "file": "cool_lab_meeting.jpg",
+     "file": "cool_lab_gathering_on_pavilion.jpg",
      "x": 21.67,
      "y": 293.25,
      "w": 62.89
     },
     {
-     "file": "cool_lab_pointcloud_campus.jpg",
+     "file": "cool_lab_pointcloud_of_campus.jpg",
      "x": 2.94,
      "y": 6.49,
      "w": 56.63
@@ -1070,7 +1073,7 @@
      "w": 25.93
     },
     {
-     "file": "cool_lab_build.mp4",
+     "file": "cool_lab_build_up.mp4",
      "x": 2.94,
      "y": 185.78,
      "w": 30
@@ -1078,10 +1081,10 @@
    ],
    "cover": "cool_lab_textile_closeup.jpg",
    "pdf": {
-    "spreads": 2,
+    "spreads": 3,
     "items": [
      {
-      "file": "cool_lab_pointcloud_campus.jpg",
+      "file": "cool_lab_pointcloud_of_campus.jpg",
       "spread": 0,
       "x": 15,
       "y": 96,
@@ -1127,7 +1130,7 @@
       "w": 63.75
      },
      {
-      "file": "cool_lab_meeting.jpg",
+      "file": "cool_lab_gathering_on_pavilion.jpg",
       "spread": 1,
       "x": 248.25,
       "y": 15,
@@ -1200,7 +1203,7 @@
      "w": 57.89
     },
     {
-     "file": "salt_away_brine_experiment.JPG",
+     "file": "salt_away_brine_experiment.jpg",
      "x": 6,
      "y": 271.05,
      "w": 30
@@ -1262,7 +1265,7 @@
    ],
    "cover": "salt_away_photo_site.jpg",
    "pdf": {
-    "spreads": 3,
+    "spreads": 4,
     "items": [
      {
       "file": "salt_away_photo_site.jpg",
@@ -1351,7 +1354,7 @@
       }
      },
      {
-      "file": "salt_away_brine_experiment.JPG",
+      "file": "salt_away_brine_experiment.jpg",
       "spread": 2,
       "x": 108,
       "y": 15,
@@ -1385,7 +1388,8 @@
      }
     ],
     "hidden": [],
-    "captions": {}
+    "captions": {},
+    "texts": []
    }
   }
  },
@@ -1415,12 +1419,12 @@
   "alors_on_danse/alors_on_danse_visualization_dining.jpg": 1.3333,
   "alors_on_danse/alors_on_danse_visualization_hallway.jpg": 1.3333,
   "alors_on_danse/alors_on_danse_visualization_kitchen.jpg": 1.3325,
-  "alors_on_danse/alors_on_danse_visualization_nightclub_bw.jpg": 1.3297,
-  "alors_on_danse/alors_on_danse_visualization_nightclub_wall.jpg": 1.3325,
+  "alors_on_danse/alors_on_danse_visualization_nightclub_crowded.jpg": 1.3297,
+  "alors_on_danse/alors_on_danse_visualization_nightclub_seperating_walls.jpg": 1.3325,
   "alors_on_danse/alors_on_danse_visualization_nightclub.jpg": 1.3324,
-  "cool_lab/cool_lab_build.mp4": 0.7895,
-  "cool_lab/cool_lab_meeting.jpg": 0.75,
-  "cool_lab/cool_lab_pointcloud_campus.jpg": 0.7072,
+  "cool_lab/cool_lab_build_up.mp4": 0.7895,
+  "cool_lab/cool_lab_gathering_on_pavilion.jpg": 0.75,
+  "cool_lab/cool_lab_pointcloud_of_campus.jpg": 0.7072,
   "cool_lab/cool_lab_test_slackline.jpg": 1.3335,
   "cool_lab/cool_lab_test_textile_hanging.jpg": 1.3333,
   "cool_lab/cool_lab_test_water_mist.jpg": 1.3333,
@@ -1430,10 +1434,10 @@
   "cool_lab/cool_lab_visualization_front.jpg": 0.707,
   "cool_lab/cool_lab_watercan.mp4": 1.3333,
   "house_of_metal/house_of_metal_concept_circulation.jpg": 0.6624,
-  "house_of_metal/house_of_metal_concept_drawings_aceton.jpg": 0.518,
-  "house_of_metal/house_of_metal_concept_groove.jpg": 0.75,
+  "house_of_metal/house_of_metal_concept_drawings_with_aceton.jpg": 0.518,
   "house_of_metal/house_of_metal_concept_material.jpg": 1.414,
   "house_of_metal/house_of_metal_concept_served_and_servant_spaces.jpg": 0.6624,
+  "house_of_metal/house_of_metal_concept_vinyl_groove.jpg": 0.75,
   "house_of_metal/house_of_metal_floorplan_animation.mp4": 0.6261,
   "house_of_metal/house_of_metal_photo_entrance.jpg": 1.5097,
   "house_of_metal/house_of_metal_visualization_gallery_inside.jpg": 1.5097,
@@ -1441,27 +1445,27 @@
   "house_of_metal/house_of_metal_visualization_workshop_inside.jpg": 0.6624,
   "house_of_metal/house_of_metal_visualization_workshop_outside.jpg": 0.75,
   "la_rotante/la_rotante_after_sandblast.jpg": 0.6624,
-  "la_rotante/la_rotante_bend.jpg": 1.3332,
-  "la_rotante/la_rotante_black.jpg": 0.6624,
-  "la_rotante/la_rotante_blue.jpg": 1.5097,
-  "la_rotante/la_rotante_cad_drawing.jpg": 1.2678,
+  "la_rotante/la_rotante_bending.jpg": 1.3332,
+  "la_rotante/la_rotante_black_finish.jpg": 0.6624,
+  "la_rotante/la_rotante_blue_finish.jpg": 1.5097,
+  "la_rotante/la_rotante_cad_drawing_for_production.jpg": 1.2678,
   "la_rotante/la_rotante_cardboard_box.jpg": 0.704,
   "la_rotante/la_rotante_detail.jpg": 0.6623,
   "la_rotante/la_rotante_in_use.jpg": 0.6624,
-  "la_rotante/la_rotante_laser_cut.jpg": 1.3332,
-  "la_rotante/la_rotante_prototyp.jpg": 0.6624,
+  "la_rotante/la_rotante_prototype.jpg": 0.6624,
+  "la_rotante/la_rotante_raw_aluminium_finish.jpg": 1.5097,
   "la_rotante/la_rotante_rotation.mp4": 1.3333,
   "la_rotante/la_rotante_sanding.jpg": 0.6624,
-  "la_rotante/la_rotante_silver.jpg": 1.5097,
   "la_rotante/la_rotante_unboxing.jpg": 0.6624,
+  "la_rotante/la_rotante_waterjet_cut.jpg": 1.3332,
   "lamina/lamina_cast_mold.jpg": 1.51,
   "lamina/lamina_liquid_bronze.jpg": 1.51,
-  "lamina/lamina_patination.jpg": 1.3333,
+  "lamina/lamina_patination_process.jpg": 1.3333,
+  "lamina/lamina_placment_in_door.jpg": 1.5094,
   "lamina/lamina_removal_of_clay.jpg": 1.51,
-  "lamina/lamina_with_door.jpg": 1.5094,
   "salt_away/salt_away_axonometry_exploded.jpg": 1.3333,
   "salt_away/salt_away_axonometry.jpg": 0.7072,
-  "salt_away/salt_away_brine_experiment.JPG": 1.3333,
+  "salt_away/salt_away_brine_experiment.jpg": 1.3333,
   "salt_away/salt_away_model_1-1.jpg": 1.5097,
   "salt_away/salt_away_model_1-20.jpg": 0.6624,
   "salt_away/salt_away_model_1-200.jpg": 0.6624,
