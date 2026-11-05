@@ -415,7 +415,36 @@
      "alors_on_danse_model_1-25_podest.jpg",
      "alors_on_danse_visualization_nightclub_bw.jpg"
     ],
-    "captions": {}
+    "captions": {},
+    "texts": [
+     {
+      "spread": 0,
+      "x": 15,
+      "y": 15,
+      "w": 60,
+      "text": "",
+      "size": 10,
+      "style": "normal"
+     },
+     {
+      "spread": 0,
+      "x": 15,
+      "y": 187,
+      "w": 63.75,
+      "text": "The site sits in the urban office surrounding in the heart of the eu-quater in Brussels",
+      "size": 12,
+      "style": "normal"
+     },
+     {
+      "spread": 1,
+      "x": 15,
+      "y": 150.2,
+      "w": 63.75,
+      "text": "The nightclub will be build in a part of the parking garage. The cut out of the ceiling will be reuses as the seperation walls between the new club and the remaining parking area",
+      "size": 12,
+      "style": "normal"
+     }
+    ]
    }
   },
   "house_of_metal": {
@@ -611,79 +640,87 @@
    }
   },
   "la_rotante": {
-   "hidden": [],
+   "hidden": [
+    "la_rotante_detail.jpg"
+   ],
    "desktop": [
     {
      "file": "la_rotante_bend.jpg",
-     "x": 11.26,
-     "y": 132.82,
-     "w": 21.45
+     "x": 4,
+     "y": 112.37,
+     "w": 22.85
     },
     {
      "file": "la_rotante_black.jpg",
      "x": 58.19,
-     "y": 201.71,
+     "y": 203.71,
      "w": 35.59
     },
     {
      "file": "la_rotante_blue.jpg",
      "x": 4,
-     "y": 216.02,
+     "y": 219.91,
      "w": 47
     },
     {
      "file": "la_rotante_unboxing.jpg",
      "x": 32.92,
-     "y": 367.66,
+     "y": 375.32,
      "w": 28.7
     },
     {
      "file": "la_rotante_cardboard_box.jpg",
      "x": 4,
-     "y": 317.98,
+     "y": 320.42,
      "w": 28.92
     },
     {
      "file": "la_rotante_cad_drawing.jpg",
-     "x": 22.25,
-     "y": 74.93,
-     "w": 30.6
+     "x": 58.19,
+     "y": 48.81,
+     "w": 40
     },
     {
      "file": "la_rotante_in_use.jpg",
-     "x": 38.22,
-     "y": 324.21,
+     "x": 38.66,
+     "y": 328.54,
      "w": 56.41
     },
     {
      "file": "la_rotante_laser_cut.jpg",
-     "x": 63.74,
-     "y": 91.24,
-     "w": 21.82
+     "x": 31.39,
+     "y": 74.17,
+     "w": 22.85
     },
     {
      "file": "la_rotante_after_sandblast.jpg",
      "x": 4,
-     "y": 402.3,
+     "y": 404.08,
      "w": 71.08
     },
     {
      "file": "la_rotante_prototyp.jpg",
-     "x": 38.22,
-     "y": 149.15,
+     "x": 42.81,
+     "y": 118.03,
      "w": 52.26
     },
     {
      "file": "la_rotante_rotation.mp4",
-     "x": 56.37,
-     "y": 272.12,
+     "x": 56.48,
+     "y": 274.57,
      "w": 30.45
     },
     {
      "file": "la_rotante_silver.jpg",
-     "x": 10.07,
+     "x": 4,
      "y": 3.53,
      "w": 39.52
+    },
+    {
+     "file": "la_rotante_sanding.jpg",
+     "x": 20.69,
+     "y": 164.77,
+     "w": 40.93
     }
    ],
    "cover": "la_rotante_silver.jpg",
@@ -832,10 +869,29 @@
        "r": 0,
        "b": 0
       }
+     },
+     {
+      "file": "la_rotante_sanding.jpg",
+      "spread": 0,
+      "x": 108.75,
+      "y": 145.27,
+      "w": 63,
+      "crop": {
+       "l": 0.1571,
+       "t": 0,
+       "r": 0.3129,
+       "b": 0
+      }
      }
     ],
-    "hidden": [],
+    "hidden": [
+     "la_rotante_detail.jpg"
+    ],
     "captions": {}
+   },
+   "coverPos": {
+    "x": 0.5,
+    "y": 1
    }
   },
   "lamina": {
@@ -944,6 +1000,10 @@
     ],
     "hidden": [],
     "captions": {}
+   },
+   "coverPos": {
+    "x": 0.5,
+    "y": 0
    }
   },
   "cool_lab": {
@@ -1122,7 +1182,12 @@
     "hidden": [
      "cool_lab_test_water_mist.jpg"
     ],
-    "captions": {}
+    "captions": {},
+    "texts": []
+   },
+   "coverPos": {
+    "x": 1,
+    "y": 0.5
    }
   },
   "salt_away": {
@@ -1381,10 +1446,12 @@
   "la_rotante/la_rotante_blue.jpg": 1.5097,
   "la_rotante/la_rotante_cad_drawing.jpg": 1.2678,
   "la_rotante/la_rotante_cardboard_box.jpg": 0.704,
+  "la_rotante/la_rotante_detail.jpg": 0.6623,
   "la_rotante/la_rotante_in_use.jpg": 0.6624,
   "la_rotante/la_rotante_laser_cut.jpg": 1.3332,
   "la_rotante/la_rotante_prototyp.jpg": 0.6624,
   "la_rotante/la_rotante_rotation.mp4": 1.3333,
+  "la_rotante/la_rotante_sanding.jpg": 0.6624,
   "la_rotante/la_rotante_silver.jpg": 1.5097,
   "la_rotante/la_rotante_unboxing.jpg": 0.6624,
   "lamina/lamina_cast_mold.jpg": 1.51,
@@ -1430,6 +1497,25 @@
    "rows": 6,
    "gutter": 6,
    "rowGutter": 6
+  },
+  "cover": "la_rotante/la_rotante_detail.jpg",
+  "coverFrost": {
+   "dark": true,
+   "blur": 0,
+   "haze": 0.2,
+   "pale": 0.5,
+   "grain": 5
+  },
+  "coverPos": {
+   "x": 0.213,
+   "y": 0.5
+  },
+  "introFrost": {
+   "dark": false,
+   "blur": 75,
+   "haze": 0.3,
+   "pale": 0.36,
+   "grain": 5
   }
  }
 }

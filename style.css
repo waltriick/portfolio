@@ -107,6 +107,9 @@ main {
 
 .collage img, .collage video, .collage .placeholder { width: 100%; height: 100%; object-fit: cover; display: block; }
 .collage img, .collage video { pointer-events: none; -webkit-user-drag: none; }
+/* mouse: title of the image below it while the mouse is on it (looks like the captions on the start page, see there) */
+.collage .hover-title { z-index: 10000; translate: 0 -100%; }   /* placed by the script: its lower edge 20px below the image */
+.collage .hover-title.on { opacity: 1; }
 
 /* Full view (lightbox) on project pages */
 .lightbox {
@@ -145,6 +148,7 @@ main {
 }
 .lightbox .counter { bottom: var(--gap); right: var(--gap); color: var(--muted); }
 .lightbox .lb-title { position: absolute; z-index: 2; top: var(--gap); left: 0; }
+.lightbox .lb-caption { position: absolute; z-index: 2; bottom: var(--gap); left: 0; right: 96px; }   /* title of the image */
 body.lightbox-open { overflow: hidden; }
 
 /* Mouse: full view, one image at a time; scrolling turns the page */
@@ -219,12 +223,16 @@ body.lightbox-open { overflow: hidden; }
 }
 .float-area img, .float-area video { -webkit-user-drag: none; pointer-events: none; }
 .float-area img, .float-area video, .float-area .placeholder { width: 100%; height: auto; display: block; }
-.float-area .caption {
+.float-area .caption { left: 0; bottom: -20px; }
+
+/* titles that appear below an image while the mouse is on it: project title on the start page,
+   image title on the project pages – one look for both */
+.float-area .caption, .collage .hover-title {
   position: absolute;
-  left: 0; bottom: -20px;
   opacity: 0;
   transition: opacity .2s;
   white-space: nowrap;
+  pointer-events: none;
 }
 
 /* =================== The four versions ===================
@@ -263,6 +271,7 @@ body.lightbox-open { overflow: hidden; }
     .lightbox .close { top: 12px; right: 16px; }
     .lightbox .counter { bottom: 12px; right: 16px; }
     .lightbox .lb-title { top: 12px; left: 16px; }
+    .lightbox .lb-caption { bottom: 12px; left: 16px; }
   }
 }
 
@@ -311,6 +320,7 @@ body.lightbox-open { overflow: hidden; }
   .lightbox .close { top: 16px; right: 16px; }
   .lightbox .counter { bottom: 16px; right: 16px; }
   .lightbox .lb-title { top: 16px; left: 16px; }
+  .lightbox .lb-caption { bottom: 16px; left: 16px; }
   /* Collapsible project list: the script sets height and opacity while you swipe */
   /* clipped only top and bottom (for folding); 10px extra room so the blur of the first and last word isn't cut */
   .project-list { overflow-x: visible; overflow-y: clip; padding-block: 10px; margin-block: -10px; }

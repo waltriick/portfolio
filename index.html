@@ -489,12 +489,34 @@ lightbox.innerHTML = `
   <button class="close" type="button">close</button>
   <div class="stage"></div>
   <div class="strip"></div>
+  <div class="lb-caption"></div>
   <div class="counter"></div>`;
 document.body.appendChild(lightbox);
 const lbStage = lightbox.querySelector(".stage");
 const lbStrip = lightbox.querySelector(".strip");
 const lbCounter = lightbox.querySelector(".counter");
 const lbTitle = lightbox.querySelector(".lb-title");
+const lbCaption = lightbox.querySelector(".lb-caption");
+// title of an image: its file name without the ending and without the project folder in front
+// ("salt_away_model.jpg" in assets/salt_away -> "model"), _ becomes a space (same in the pdf)
+const imageTitle = src => {
+  const folder = decodeURIComponent(src.split("/").slice(-2, -1)[0] || "");
+  return titleOf(fileOf(src), folder);
+};
+const titleOf = (file, folder = "") => {
+  let t = file.replace(/\.[^.]+$/, "");                 // without its ending
+  if (folder) {                                          // without the project in front: "salt_away_model" -> "model"
+    const parts = folder.split(/[ _-]+/).filter(Boolean).map(w => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    const rest = t.replace(new RegExp("^" + parts.join("[ _-]+") + "[ _-]+", "i"), "");
+    if (rest) t = rest;
+  }
+  return t.replace(/_/g, " ").trim();
+};
+// counter and image title of image i
+function showCount(i) {
+  lbCounter.textContent = `${i + 1} / ${lbList.length}`;
+  lbCaption.textContent = imageTitle(lbList[i]);
+}
 let lbList = [], lbIndex = 0, lbAlt = "";
 
 // Mouse (also in a narrow window): horizontal strip; touchscreens: one image at a time with swipe and pinch-zoom
@@ -548,7 +570,7 @@ function openStrip(index) {
   stripTurning = false;
   markCurrent(index, -1, true);
   moveTrack(index, false);
-  lbCounter.textContent = `${index + 1} / ${lbList.length}`;
+  showCount(index);
 }
 
 // Loads only the current image and its two neighbours, so opening the full view doesn't fetch the whole project
@@ -615,7 +637,7 @@ function goToSlide(i) {
   stripTurning = true;
   markCurrent(i, stripIndex, false);         // video waits until it has arrived
   stripIndex = i;
-  lbCounter.textContent = `${i + 1} / ${lbList.length}`;
+  showCount(i);
   moveTrack(i, true);
   clearTimeout(turnTimer);
   turnTimer = setTimeout(finishTurn, 800);   // safety net in case the browser skips the animation end
@@ -681,7 +703,7 @@ function showInLightbox(index) {
   resetZoom();
   lbIndex = Math.max(0, Math.min(lbList.length - 1, index));   // stops at the first and last image
   lbStage.replaceChildren(mediaElement(lbList[lbIndex], lbAlt, { eager: true }));
-  lbCounter.textContent = `${lbIndex + 1} / ${lbList.length}`;
+  showCount(lbIndex);
 }
 
 function closeLightbox() {
@@ -928,6 +950,10 @@ function projectPage(project) {
     const saved = await savedLayout(project);
     if (location.hash.slice(1) !== project.slug) return;
 
+    // mouse: the title of an image appears below it while the mouse is on it (one shared label above all images)
+    const hoverTitle = document.createElement("div");
+    hoverTitle.className = "hover-title";
+    collage.appendChild(hoverTitle);
     const items = list.map((src, i) => {
       const figure = document.createElement("figure");
       figure.style.zIndex = i + 1;
@@ -936,7 +962,15 @@ function projectPage(project) {
       figure.appendChild(mediaElement(src, project.title, { videoPreload: "none" }));
       // click opens the full view
       figure.addEventListener("click", () => openLightbox(list, i, project.title));
-      collage.appendChild(figure);
+      figure.addEventListener("mouseenter", () => {
+        if (isTouch()) return;
+        hoverTitle.textContent = imageTitle(src);
+        hoverTitle.style.left = figure.offsetLeft + "px";
+        hoverTitle.style.top = figure.offsetTop + figure.offsetHeight + 20 + "px";   // its lower edge (like the start page)
+        hoverTitle.classList.add("on");
+      });
+      figure.addEventListener("mouseleave", () => hoverTitle.classList.remove("on"));
+      collage.insertBefore(figure, hoverTitle);
       return { figure, file: fileOf(src), ratio: ratios[i] };
     });
     const ratio = new Map(items.map(it => [it.file, it.ratio]));

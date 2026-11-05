@@ -1,9 +1,10 @@
 /* =========================================================
    PDF PORTFOLIO — builds the book from the chosen projects
    A4, read as double pages (left page = even number, right page = odd number):
-     1        cover: the title images of the chosen projects, scattered like on the start page,
-              behind frosted glass; "patrick walter archive" in one line and below it the
-              date and time of creating the pdf, both right-aligned
+     1        cover: the image chosen in the gallery editor ("cover" under pdf pages), filling the page
+              behind frosted glass (always the same, whatever projects are chosen);
+              "patrick walter archive" in one line and below it the date and time of creating the pdf,
+              both right-aligned; along the left edge the chosen projects, title and year, reading downwards
      2 – 3    statement from the info page, at the bottom (left) · contents (right)
      4 – 5    about me: portrait (picture(s) from assets/about_me, placed in the gallery editor,
               "about me" in mode "pdf") · cv (right)
@@ -12,84 +13,19 @@
               right = the facts,
               then the double pages with its images as arranged in the gallery editor (mode "pdf"),
               cropped as set there, each with its number and on every page a list of the image titles
-              (settings: PDF_CAPTION in pdf-layout.js)
+              (settings: PDF_CAPTION in pdf-settings.js)
      last     back cover, a single black page: the logo (favicon.svg, in white) centred on the lower margin,
               above it name, "archive", a short note, contact, date and time, aligned to the logo's left edge
    Title image of a project: chosen in the gallery editor, otherwise its first image.
-   The margins of all pages (around and at the bottom) are set in the gallery editor (layout.json), see also pdf-layout.js.
+   The margins of all pages (around and at the bottom) are set in the gallery editor (layout.json), see also pdf-settings.js.
+   All settings (sizes, type, texts, positions) are in pdf-settings.js: this file only builds the book.
    Uses the free library pdf-lib (loaded only when you click "create pdf").
    ========================================================= */
-const PDF = {
-  size: 12,                // pt, normal text
-  small: 7.5,             // pt, page numbers
-  lineHeight: 1.45,       // like the website
-  listWidth: 80,          // mm, width of the contents list (like the menu on the website)
-  textWidth: 120,         // mm, width of longer texts
-  yearColumn: 24,         // mm, year column of the cv
-  coverWidth: [30, 80],   // mm, smallest and largest image on the cover
-  coverTitle: {           // "patrick walter   archive" on the cover, in one line on the same baseline
-    size: 18,             // pt, "patrick walter"
-    style: "bold italic",      // "normal", "bold", "italic" or "bold italic"
-    archiveSize: 15,      // pt, "archive" (smaller)
-    archiveStyle: "italic",
-    gap: 5,               // mm, space between "patrick walter" and "archive"
-    x: 0.9,              // RIGHT end of the text, as part of the page width (0.5 = middle, 1 = right edge)
-    y: 0.465,             // height of the baseline, as part of the page height (0.5 = middle)
-    dateSize: 10,          // pt, date and time of creating the pdf, in a line below (also right-aligned)
-    dateStyle: "italic",
-    dateGap: 6            // mm from the baseline of the title to the baseline of the date
-  },
-  backCover: {            // last page, black: logo centred on the lower margin, the text above it
-                          // (text starts at the left edge of the logo and stacks upwards from it)
-    width: 80,            // mm, width of the text block
-    size: 12,              // pt
-    style: "italic",      // "normal", "bold", "italic" or "bold italic"
-    gap: 10,              // mm, empty space between the parts (name, note, contact, date, logo)
-    // the note; <br> starts a new line (<br><br> = an empty line)
-    note: "This portfolio shows a curated selection of my projects. It is not a fixed publication and may change over time.<br>Please visit patrickarchive.com for more projects.",
-    logo: "favicon.svg",  // logo, drawn in white ("" = no logo; the text then stands where the logo would be)
-    logoWidth: 12         // mm
-  },
-  introTitle: {           // project title on the left introduction page (on the frosted title image)
-    size: 18,             // pt
-    style: "bold italic", // "normal", "bold", "italic" or "bold italic"
-    align: "left",        // "left" = x is where the text starts, "right" = x is where the text ends
-    x: 0.1,               // as part of the page width (0 = left edge, 0.5 = middle, 1 = right edge)
-    y: 0.465              // height of the baseline, as part of the page height (0.5 = middle)
-  },
+// all settings are in pdf-settings.js (PDF, PDF_COVER, PDF_INTRO, PDF_CAPTION …)
+PDF.coverFrost = PDF_COVER.frost;               // frosted glass: replaced by the values from the editor when building
+PDF.introFrost = PDF_INTRO.frost;
 
-  // type style of the other texts: "normal", "bold", "italic" or "bold italic"
-  styles: {
-    header: "normal",       // "patrick walter / archive" above the contents
-    contents: "normal",     // entries of the contents (and their page numbers)
-    heading: "normal",      // headings of the statement and the cv, e.g. "education"
-    text: "normal",         // running text: statement, cv entries, project texts
-    year: "normal",         // years in the cv
-    projectTitle: "normal", // title on the right introduction page
-    facts: "normal",        // year, place and context of a project
-    pageNumber: "normal"
-  },
-
-  // frosted glass of the cover
-  coverFrost: {
-    dark: true,           // true = black page, black haze and white text · false = white page, white haze, black text
-    blur: 100,            // how strongly the images are blurred (higher = softer)
-    haze: 0.5,           // milky layer on top (0 = none, 1 = only the colour of the layer)
-    pale: 0.36,           // takes away colour (0 = full colour)
-    grain: 5              // fine grain like on film (0 = none)
-  },
-  // frosted glass of the left introduction page of every project
-  introFrost: {
-    dark: false,          // same meaning as above
-    blur: 75,
-    haze: 0.25,
-    pale: 0.36,
-    grain: 5
-  },
-  fileName: "patrick_walter_portfolio.pdf"
-};
-
-const A4 = PDF_PAGE;                            // mm, 210 × 297 (pdf-layout.js)
+const A4 = PDF_PAGE;                            // mm, 210 × 297 (pdf-settings.js)
 const PT = 72 / 25.4;                           // points per mm (PDF measures in points)
 const BLACK = [17, 17, 17], GREY = [138, 138, 138], PLACEHOLDER = [241, 240, 238];
 const MM_PER_PT = 25.4 / 72;
@@ -149,10 +85,10 @@ function wrap(text, width, size, style) {
 
 // writes text with its top edge at y (mm from the top of the page), returns the y below it
 // (page = null only measures, without writing)
-function write(page, text, x, y, { size = PDF.size, color = BLACK, width, align = "left", style = "normal" } = {}) {
+function write(page, text, x, y, { size = PDF.size, color = BLACK, width, align = "left", style = "normal", leading } = {}) {
   const font = fontOf(style);
   const lines = wrap(safe(text), width, size, style);
-  const lh = lineHeight(size);
+  const lh = leading ? size * MM_PER_PT * leading : lineHeight(size);   // leading: own line spacing (× size)
   const ascent = font.heightAtSize(size, { descender: false }) * MM_PER_PT;
   if (page) lines.forEach((line, i) => {
     const w = textWidth(line, size, style);
@@ -199,91 +135,20 @@ function loadImage(src) {
 }
 
 // an empty page as a canvas (150 dpi); px = how many pixels one mm is
-function pageCanvas() {
-  const c = document.createElement("canvas");
-  c.width = 1240;
-  c.height = Math.round(c.width * A4.h / A4.w);
-  return { canvas: c, ctx: c.getContext("2d"), px: c.width / A4.w };
-}
+const pageCanvas = pdfPageCanvas;          // canvas of a whole page (pdf-settings.js)
 
-// frosted glass over the whole page: blurred, a little pale, milky, fine grain
-// (settings: PDF.coverFrost or PDF.introFrost; dark = black instead of white haze)
-function frost(canvas, { blur, haze, pale, grain, dark }) {
-  const W = canvas.width, H = canvas.height, ctx = canvas.getContext("2d");
-  // blur: shrink step by step, then enlarge step by step (smooth in every browser)
-  let src = canvas, w = W, h = H;
-  const steps = [];
-  while (w / 2 >= W / blur) {
-    w = Math.round(w / 2); h = Math.round(h / 2);
-    const c = document.createElement("canvas");
-    c.width = w; c.height = h;
-    const cx = c.getContext("2d");
-    cx.imageSmoothingQuality = "high";
-    cx.drawImage(src, 0, 0, w, h);
-    steps.push(c);
-    src = c;
-  }
-  for (let i = steps.length - 2; i >= -1; i--) {
-    const target = i >= 0 ? steps[i] : canvas;
-    const tx = target.getContext("2d");
-    tx.imageSmoothingQuality = "high";
-    tx.clearRect(0, 0, target.width, target.height);
-    tx.drawImage(src, 0, 0, target.width, target.height);
-    src = target;
-  }
-  ctx.globalCompositeOperation = "saturation";
-  ctx.fillStyle = `rgba(128, 128, 128, ${pale})`;
-  ctx.fillRect(0, 0, W, H);
-  ctx.globalCompositeOperation = "source-over";
-  ctx.fillStyle = dark ? `rgba(0, 0, 0, ${haze})` : `rgba(255, 255, 255, ${haze})`;
-  ctx.fillRect(0, 0, W, H);
-  if (grain) {
-    const data = ctx.getImageData(0, 0, W, H);
-    const d = data.data;
-    for (let i = 0; i < d.length; i += 4) {
-      const n = (Math.random() - 0.5) * grain;
-      d[i] += n; d[i + 1] += n; d[i + 2] += n;
-    }
-    ctx.putImageData(data, 0, 0);
-  }
-  return canvas.toDataURL("image/jpeg", 0.85);
-}
+const frost = pdfFrost;                      // frosted glass (pdf-settings.js)
 
-// introduction page: the image fills the whole page (cropped in the middle), behind frosted glass
-function frostedImage(img) {
-  const { canvas, ctx } = pageCanvas();
-  const s = Math.max(canvas.width / img.naturalWidth, canvas.height / img.naturalHeight);
-  const iw = img.naturalWidth * s, ih = img.naturalHeight * s;
-  ctx.drawImage(img, (canvas.width - iw) / 2, (canvas.height - ih) / 2, iw, ih);
-  return frost(canvas, PDF.introFrost);
-}
-
-// cover: the images scattered at random over the whole page so that they cover each other
-// as little as possible (like the start page), behind frosted glass
-function frostedCover(images) {
-  const { canvas, ctx, px } = pageCanvas();
-  ctx.fillStyle = PDF.coverFrost.dark ? "#000" : "#fff";   // paper colour of the cover
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  const placed = [];
-  const overlap = (a, b) => Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)) *
-                            Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
-  images.forEach(img => {
-    const w = PDF.coverWidth[0] + Math.random() * (PDF.coverWidth[1] - PDF.coverWidth[0]);
-    const h = w * img.naturalHeight / img.naturalWidth;
-    let best = null;
-    for (let k = 0; k < 60; k++) {
-      const box = { x: -8 + Math.random() * (A4.w - w + 16), y: -10 + Math.random() * (A4.h - h + 20), w, h };
-      const score = placed.reduce((sum, p) => sum + overlap(box, p), 0);
-      if (!best || score < best.score) best = { ...box, score };
-    }
-    placed.push(best);
-    ctx.drawImage(img, best.x * px, best.y * px, best.w * px, best.h * px);
-  });
-  return frost(canvas, PDF.coverFrost);
+// cover and introduction pages: the image fills the whole page behind frosted glass
+// (pos: which part of it, see pdfFill in pdf-settings.js; without one the middle)
+function frostedImage(img, settings = PDF.introFrost, pos) {
+  const { canvas } = pageCanvas();
+  pdfFill(canvas, img, pos);
+  return frost(canvas, settings);
 }
 
 // image for a page of the pdf: JPEG with about 300 dpi at the size it has on the paper (w in mm),
-// cut as set in the gallery editor (crop: part cut away on each side, see pdf-layout.js)
+// cut as set in the gallery editor (crop: part cut away on each side, see pdf-settings.js)
 function printJpeg(img, w, crop = {}) {
   const { l = 0, t = 0, r = 0, b = 0 } = crop;
   const sw = img.naturalWidth * (1 - l - r), sh = img.naturalHeight * (1 - t - b);   // part that is kept
@@ -342,18 +207,16 @@ function drawSection(page, section, x, y) {
 
 /* ---------- the pages ---------- */
 // date and time in the form 2026-10-28 12:15am
-function timestamp(d = new Date()) {
-  const two = n => String(n).padStart(2, "0");
-  const h = d.getHours() % 12 || 12;              // 12-hour clock: 12:05am, 01:30pm …
-  return `${d.getFullYear()}-${two(d.getMonth() + 1)}-${two(d.getDate())} ${two(h)}:${two(d.getMinutes())}${d.getHours() < 12 ? "am" : "pm"}`;
-}
+const timestamp = pdfTimestamp;             // "2026-11-05 04:32pm" (pdf-settings.js)
 
-// cover: frosted image, "patrick walter" and a smaller "archive" on one baseline,
-// below it the date and time of creating the pdf, all right-aligned at PDF.coverTitle.x
-function cover(page, image, date) {
+// cover: frosted image (without one: a black page if dark), "patrick walter" and a smaller "archive" on one baseline,
+// below it the date and time of creating the pdf, all right-aligned at PDF_COVER.title.x;
+// along the left edge the projects in the pdf, title and year, reading downwards (PDF_COVER.list in pdf-settings.js)
+function cover(page, image, date, chosen) {
   if (image) drawImage(page, image, 0, 0, A4.w, A4.h);
+  else if (PDF.coverFrost.dark) page.drawRectangle({ x: 0, y: 0, width: A4.w * PT, height: A4.h * PT, color: colour(BLACK) });
   const ink = colour(PDF.coverFrost.dark ? [255, 255, 255] : BLACK);   // white text on the dark cover
-  const { size, style, archiveSize, archiveStyle, gap, x, y, dateSize, dateStyle, dateGap } = PDF.coverTitle;
+  const { size, style, archiveSize, archiveStyle, gap, x, y, dateSize, dateStyle, dateGap } = PDF_COVER.title;
   const name = "patrick walter", word = "archive";
   const nameWidth = textWidth(name, size, style);
   const left = A4.w * x - nameWidth - gap - textWidth(word, archiveSize, archiveStyle);
@@ -362,6 +225,11 @@ function cover(page, image, date) {
   page.drawText(word, { x: (left + nameWidth + gap) * PT, y: baseline, size: archiveSize, font: fontOf(archiveStyle), color: ink });
   page.drawText(date, { x: (A4.w * x - textWidth(date, dateSize, dateStyle)) * PT, y: baseline - dateGap * PT,
     size: dateSize, font: fontOf(dateStyle), color: ink });
+  const L = PDF_COVER.list;
+  pdfCoverList(chosen, (t, s, st) => textWidth(safe(t), s, st), PDF.margin, PDF.marginBottom).forEach(l => {
+    page.drawText(safe(l.text), { x: l.x * PT, y: (A4.h - l.y) * PT, rotate: PDFLib.degrees(-90),
+      size: L.size, font: fontOf(L.style), color: ink });
+  });
 }
 
 // the logo as a white picture (PNG with transparent background), whatever colour the SVG has;
@@ -440,15 +308,21 @@ function bottomText(page, section) {
   drawSection(page, section, PDF.margin, A4.h - PDF.marginBottom - height);
 }
 
-// left introduction page: frosted title image with the project title (position: PDF.introTitle)
+// left introduction page: frosted title image with the project title and below it its year
+// (position and type: PDF_INTRO.title)
 function introImage(page, image, project) {
   if (image) drawImage(page, image, 0, 0, A4.w, A4.h);
   else page.drawRectangle({ x: 0, y: 0, width: A4.w * PT, height: A4.h * PT, color: colour(PLACEHOLDER) });
-  const { size, style, align, x, y } = PDF.introTitle;
-  const title = safe(project.title.toLowerCase());
-  const left = align === "right" ? A4.w * x - textWidth(title, size, style) : A4.w * x;
-  page.drawText(title, { x: left * PT, y: (A4.h - A4.h * y) * PT,
-    size, font: fontOf(style), color: colour(PDF.introFrost.dark ? [255, 255, 255] : BLACK) });
+  const { size, style, align, x, y, yearSize, yearStyle, yearGap } = PDF_INTRO.title;
+  const ink = colour(PDF.introFrost.dark ? [255, 255, 255] : BLACK);
+  const baseline = (A4.h - A4.h * y) * PT;
+  const line = (text, s, st, base) => {
+    const t = safe(String(text));
+    const left = align === "right" ? A4.w * x - textWidth(t, s, st) : A4.w * x;
+    page.drawText(t, { x: left * PT, y: base, size: s, font: fontOf(st), color: ink });
+  };
+  line(project.title.toLowerCase(), size, style, baseline);
+  if (project.year) line(project.year, yearSize, yearStyle, baseline - yearGap * PT);
 }
 
 function introFacts(page, project) {
@@ -502,11 +376,18 @@ async function aboutSpread(pdf, isImage) {
 }
 
 // one page of a double page: everything that lies (partly) on it; an image across the fold appears on both pages
-// (titles: { spread, numbered, spec } of the project = with numbers and image titles, otherwise without)
-function contentPage(page, items, side, titles) {
+// (titles: { spread, numbered, spec } of the project = with numbers and image titles, otherwise without;
+//  texts: text fields of this double page, each on the page where its left edge is)
+function contentPage(page, items, side, titles, texts = []) {
   items.forEach(e => {
     const x = e.x - side * A4.w;
     if (x + e.w > 0 && x < A4.w) drawImage(page, e.image, x, e.y, e.w, e.h);
+  });
+  texts.filter(t => pdfTextSide(t) === side && t.text).forEach(t => {
+    const align = t.align || "left";                     // left, center or right within its width
+    const x = t.x - side * A4.w + (align === "center" ? t.w / 2 : align === "right" ? t.w : 0);
+    write(page, t.text, x, t.y, { size: t.size || PDF_TEXT.size, style: t.style || PDF_TEXT.style,
+      width: t.w, leading: PDF_TEXT.lineHeight, align });
   });
   if (!titles || !PDF_CAPTION.show) return;
   const { size, numberColumn, numberGap } = PDF_CAPTION;
@@ -516,13 +397,21 @@ function contentPage(page, items, side, titles) {
     if (right > 0 && right <= A4.w) captionText(page, String(titles.numbered[e.file]), right, e.y + e.h + numberGap, "right");
   });
   // the list of image titles of this page
-  const lines = pdfCaptionLines(items, titles.numbered, titles.spread, side);
+  const lines = pdfCaptionLines(items, titles.numbered, titles.spread, side, titles.folder);
   if (!lines.length) return;
   const spot = pdfCaptionSpot(titles.spec, titles.spread, side, lines.length, PDF.margin, PDF.marginBottom);
+  const width = Math.max(...lines.map(l => textWidth(safe(l.title), size, "normal"))) + numberColumn;
   lines.forEach((l, i) => {
     const y = spot.y + i * pdfCaptionLine();
-    captionText(page, String(l.n), spot.x, y);
-    captionText(page, l.title, spot.x + numberColumn, y);
+    if (pdfCaptionRight(side)) {                         // left page, mirrored: "title  1", ending at xr
+      const xr = spot.xr ?? spot.x + width;
+      captionText(page, String(l.n), xr, y, "right");
+      captionText(page, l.title, xr - numberColumn, y, "right");
+    } else {                                             // "1  title", starting at x
+      const x = spot.x ?? spot.xr - width;
+      captionText(page, String(l.n), x, y);
+      captionText(page, l.title, x + numberColumn, y);
+    }
   });
 }
 
@@ -550,14 +439,17 @@ async function makePortfolio(chosen, report) {
   };
   PDF.margin = ((await layoutData) || {}).pdf?.margin ?? PDF_MARGIN;   // margins from the gallery editor
   PDF.marginBottom = ((await layoutData) || {}).pdf?.marginBottom ?? PDF_MARGIN_BOTTOM;
+  PDF.coverFrost = pdfFrostOf(await layoutData, "coverFrost");   // frosted glass as set in the gallery editor
+  PDF.introFrost = pdfFrostOf(await layoutData, "introFrost");
 
   // title image of every project: chosen in the gallery editor, otherwise its first image (no videos)
   const isImage = src => !src.toLowerCase().endsWith(".mp4");
-  const titleImages = [];
+  const titleImages = [], titlePos = [];
   for (let i = 0; i < chosen.length; i++) {
     report(`loading images … ${i + 1}/${chosen.length}`);
     const images = (await media(chosen[i])).filter(isImage);
     const title = (await savedLayout(chosen[i]))?.cover;
+    titlePos.push((await savedLayout(chosen[i]))?.coverPos);   // part of the title image, moved in the editor
     const src = images.find(s => fileOf(s) === title) || images[0];
     titleImages.push(src ? await loadImage(src) : null);
   }
@@ -565,11 +457,16 @@ async function makePortfolio(chosen, report) {
   // left introduction pages: every title image behind frosted glass
   report("preparing the pages …");
   const intros = [];
-  for (const img of titleImages) intros.push(img ? await pdf.embedJpg(frostedImage(img)) : null);
+  for (let i = 0; i < titleImages.length; i++) {
+    const img = titleImages[i];
+    intros.push(img ? await pdf.embedJpg(frostedImage(img, PDF.introFrost, titlePos[i])) : null);
+  }
 
-  // cover: all title images, scattered, behind frosted glass
-  const onCover = titleImages.filter(Boolean).sort(() => Math.random() - 0.5);
-  const coverImage = onCover.length ? await pdf.embedJpg(frostedCover(onCover)) : null;
+  // cover: the image chosen in the gallery editor ("folder/file" in layout.json), filling the page
+  const coverPath = ((await layoutData) || {}).pdf?.cover;
+  const coverImg = coverPath ? await loadImage(`${ASSET_FOLDER}/${coverPath.split("/").map(encodeURIComponent).join("/")}`) : null;
+  const coverPos = ((await layoutData) || {}).pdf?.coverPos;   // part of the image, moved in the editor
+  const coverImage = coverImg ? await pdf.embedJpg(frostedImage(coverImg, PDF.coverFrost, coverPos)) : null;
 
   // info text: the first section is the statement, the others are the cv;
   // contact paragraphs go to the back cover
@@ -582,8 +479,9 @@ async function makePortfolio(chosen, report) {
   const logoFile = PDF.backCover.logo && await whiteLogo(PDF.backCover.logo);
   const logo = logoFile && { image: await pdf.embedPng(logoFile.data), ratio: logoFile.ratio };
 
-  // picture(s) of "about me"
+  // picture(s) and text fields of "about me"
   const about = await aboutSpread(pdf, isImage);
+  const aboutTexts = ((await layoutData) || {}).pdf?.about?.texts || [];
 
   // images of every project on its double pages
   const spreads = [];
@@ -596,11 +494,11 @@ async function makePortfolio(chosen, report) {
   // introduction double page, its image double pages · back cover
   // (number: false = no page number on this page)
   const plan = [
-    { draw: page => cover(page, coverImage, date), number: false },
+    { draw: page => cover(page, coverImage, date, chosen), number: false },
     { draw: page => bottomText(page, sections[0]) },
     { draw: page => contents(pdf, page, entries, pages) },
-    { draw: page => contentPage(page, about, 0) },
-    { draw: page => { contentPage(page, about, 1); textPage(page, sections.slice(1)); } },
+    { draw: page => contentPage(page, about, 0, null, aboutTexts) },
+    { draw: page => { contentPage(page, about, 1, null, aboutTexts); textPage(page, sections.slice(1)); } },
   ];
   const entries = [{ title: "about me", page: 5 }];
   chosen.forEach((p, i) => {
@@ -610,8 +508,9 @@ async function makePortfolio(chosen, report) {
     const { spreads: count, items, numbered, spec } = spreads[i];
     for (let s = 0; s < count; s++) {
       const on = items.filter(e => e.spread === s);
-      const titles = { spread: s, numbered, spec };
-      plan.push({ draw: page => contentPage(page, on, 0, titles) }, { draw: page => contentPage(page, on, 1, titles) });
+      const titles = { spread: s, numbered, spec, folder: fileName(p.title) };   // folder: left out of the image titles
+      const texts = ((spec && spec.texts) || []).filter(t => t.spread === s);   // text fields of this double page
+      plan.push({ draw: page => contentPage(page, on, 0, titles, texts) }, { draw: page => contentPage(page, on, 1, titles, texts) });
     }
   });
   // a single page at the end: the book has an even number of pages
