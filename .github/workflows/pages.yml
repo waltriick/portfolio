@@ -32,7 +32,7 @@ jobs:
           python3 -c "import json, os; files = sorted(os.path.join(r, f).replace(os.sep, '/') for r, _, fs in os.walk('assets') for f in fs if not f.startswith('.')); print(json.dumps(files, indent=1))" > assets.json
           echo "Files found: $(grep -c assets/ assets.json || true)"
 
-      # Smaller copies (at most 1000 px wide) for the start page on phones, in the folder "small".
+      # Smaller copies for the start page on phones, in the folder "small".
       # They exist only on the published site: your originals in the repository stay untouched.
       # Images that are small enough anyway are copied unchanged; the others are scaled down
       # with high quality (JPEG quality 92, colour profile kept, turned upright like in the browser).
